@@ -1,5 +1,20 @@
 package de.hhu.bsinfo.app;
 
+import picocli.CommandLine;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.cli.Option;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.hhu.bsinfo.dxmem.data.ChunkByteArray;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
@@ -9,30 +24,11 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 import de.hhu.bsinfo.dxram.migration.MigrationService;
-import de.hhu.bsinfo.dxram.migration.MigrationStatus;
-import de.hhu.bsinfo.dxram.migration.MigrationTicket;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
-
-public class MigrationApp extends AbstractApplication {
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+public class ChunkBenchmark extends AbstractApplication {
+    private static Logger LOGGER = LogManager.getFormatterLogger(ChunkBenchmark.class);
 
     private static final String DEFAULT_TOTAL_SIZE = String.valueOf(1024 * 1024 * 32);
 
@@ -55,7 +51,7 @@ public class MigrationApp extends AbstractApplication {
 
     @Override
     public String getApplicationName() {
-        return "MigrationApp";
+        return "ChunkBenchmark";
     }
 
     @Override
@@ -130,7 +126,8 @@ public class MigrationApp extends AbstractApplication {
 
             creationTimes[i] = System.currentTimeMillis() - then;
 
-            log.info("Migrating chunk range [{} , {}]", ChunkID.toHexString(firstChunk), ChunkID.toHexString(lastChunk + 1));
+            log.info("Migrating chunk range [{} , {}]", ChunkID.toHexString(firstChunk),
+                    ChunkID.toHexString(lastChunk + 1));
 
             then = System.currentTimeMillis();
             MigrationTicket<MigrationStatus> future = migrationService.migrateRange(firstChunk, lastChunk + 1, target);
@@ -148,7 +145,9 @@ public class MigrationApp extends AbstractApplication {
 
         String user = System.getProperty("user.name");
 
-        File logDir = new File(String.format("/home/%s/dxlogs/migration/migration_%d_%d_%d-%d.csv", user, workerCount, iterations, numChunks, System.currentTimeMillis()));
+        File logDir = new File(
+                String.format("/home/%s/dxlogs/migration/migration_%d_%d_%d-%d.csv", user, workerCount, iterations,
+                        numChunks, System.currentTimeMillis()));
         logDir.getParentFile().mkdirs();
 
         try {
@@ -177,23 +176,23 @@ public class MigrationApp extends AbstractApplication {
     protected List<Option> getOptions() {
         return Arrays.asList(
                 Option.builder(ARG_TOTAL).argName(ARG_TOTAL)
-                    .hasArg()
-                    .desc("The total amount of data to send in bytes")
-                    .required(false)
-                    .type(Integer.class)
-                    .build(),
+                        .hasArg()
+                        .desc("The total amount of data to send in bytes")
+                        .required(false)
+                        .type(Integer.class)
+                        .build(),
                 Option.builder(ARG_CHUNK).argName(ARG_CHUNK)
-                    .hasArg()
-                    .desc("The size of a single chunk in bytes")
-                    .required(false)
-                    .type(Integer.class)
-                    .build(),
+                        .hasArg()
+                        .desc("The size of a single chunk in bytes")
+                        .required(false)
+                        .type(Integer.class)
+                        .build(),
                 Option.builder(ARG_ITERATIONS).argName(ARG_ITERATIONS)
-                    .hasArg()
-                    .desc("The iteration count")
-                    .required(false)
-                    .type(Integer.class)
-                    .build()
+                        .hasArg()
+                        .desc("The iteration count")
+                        .required(false)
+                        .type(Integer.class)
+                        .build()
         );
     }
 }
