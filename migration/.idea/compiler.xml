@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="dxapp_main" target="1.8" />
+      <module name="dxapp_test" target="1.8" />
+      <module name="dxbuild_main" target="1.8" />
+      <module name="dxbuild_test" target="1.8" />
+      <module name="dxgradle_main" target="1.8" />
+      <module name="dxgradle_test" target="1.8" />
+      <module name="dxmon_main" target="1.8" />
+      <module name="dxmon_test" target="1.8" />
+      <module name="dxnet_main" target="1.8" />
+      <module name="dxnet_test" target="1.8" />
+      <module name="dxram_dxramTest" target="1.8" />
+      <module name="dxram_main" target="1.8" />
+      <module name="dxram_test" target="1.8" />
+      <module name="dxutils_main" target="1.8" />
+      <module name="dxutils_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

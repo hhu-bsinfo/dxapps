@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/../../dxbuild">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../dxbuild" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../dxram">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../dxram" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../dxutils">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../dxutils" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../dxmon">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../dxmon" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../dxnet">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../dxnet" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="disableWrapperSourceDistributionNotification" value="true" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../../dxbuild" />
+            <option value="$PROJECT_DIR$/../../dxmon" />
+            <option value="$PROJECT_DIR$/../../dxnet" />
+            <option value="$PROJECT_DIR$/../../dxram" />
+            <option value="$PROJECT_DIR$/../../dxutils" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
