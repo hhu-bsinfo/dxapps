@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a5cda3d2-568c-4b7d-9c51-a25b631a6844" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/HelloWorldApp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/HelloWorldWithConfigApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../dxbuild/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/../../dxbuild/gradlew" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../dxbuild/gradlew.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../../dxbuild/gradlew.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../dxmon/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/../../dxmon/gradlew" afterDir="false" />
@@ -100,7 +98,7 @@
           <entry key="class" value="2" />
           <entry key="gradle" value="2" />
           <entry key="groovy" value="3" />
-          <entry key="java" value="26" />
+          <entry key="java" value="28" />
           <entry key="xml" value="2" />
         </counts>
       </usages-collector>
@@ -108,21 +106,21 @@
         <counts>
           <entry key="CLASS" value="2" />
           <entry key="Groovy" value="5" />
-          <entry key="JAVA" value="26" />
+          <entry key="JAVA" value="28" />
           <entry key="XML" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="gradle" value="23" />
-          <entry key="java" value="4198" />
+          <entry key="java" value="4259" />
           <entry key="xml" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Groovy" value="23" />
-          <entry key="JAVA" value="4198" />
+          <entry key="JAVA" value="4259" />
           <entry key="XML" value="4" />
         </counts>
       </usages-collector>
@@ -134,7 +132,7 @@
         <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/migration/MigrationManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
-              <caret line="185" column="49" lean-forward="true" selection-start-line="185" selection-start-column="49" selection-end-line="185" selection-end-column="49" />
+              <caret line="185" column="49" selection-start-line="185" selection-start-column="49" selection-end-line="185" selection-end-column="49" />
               <folding>
                 <element signature="e#14853#14854#0" expanded="true" />
                 <element signature="e#14889#14890#0" expanded="true" />
@@ -143,29 +141,29 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/net/NetworkComponentConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
+            <state relative-caret-position="420">
+              <caret line="38" column="7" lean-forward="true" selection-start-line="38" selection-start-column="7" selection-end-line="38" selection-end-column="7" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../dxnet/src/main/java/de/hhu/bsinfo/dxnet/core/CoreConfig.java">
+        <entry file="file://$PROJECT_DIR$/../../dxutils/src/main/java/de/hhu/bsinfo/dxutils/serialization/ObjectSizeUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+            <state relative-caret-position="1080">
+              <caret line="90" column="33" lean-forward="true" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/LargeBufferApp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="126" column="52" selection-start-line="126" selection-start-column="52" selection-end-line="126" selection-end-column="52" />
+            <state relative-caret-position="120">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -174,19 +172,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../dxbuild/src/main/groovy/de/hhu/bsinfo/dxram/gradle/task/SpoonTask.groovy">
+        <entry file="file://$PROJECT_DIR$/../../dxnet/src/main/java/de/hhu/bsinfo/dxnet/core/CoreConfig.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="900">
-              <caret line="68" column="57" selection-start-line="68" selection-start-column="57" selection-end-line="68" selection-end-column="57" />
+            <state relative-caret-position="330">
+              <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../dxbuild/src/main/groovy/de/hhu/bsinfo/dxram/gradle/task/BuildConfigTask.groovy">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="17" column="6" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="6" />
+            <state relative-caret-position="466">
+              <caret line="150" column="72" selection-start-line="150" selection-start-column="72" selection-end-line="150" selection-end-column="72" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -248,7 +249,7 @@
     </dirStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../dxram" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
@@ -2761,9 +2762,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="1999" />
-    <option name="y" value="61" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="2027" />
+    <option name="y" value="80" />
     <option name="width" value="1717" />
     <option name="height" value="1048" />
   </component>
@@ -2779,92 +2780,63 @@
           <expand>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="de" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="hhu" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="de" type="462c0819:PsiDirectoryNode" />
               <item name="hhu" type="462c0819:PsiDirectoryNode" />
-              <item name="bsinfo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="de" type="462c0819:PsiDirectoryNode" />
               <item name="hhu" type="462c0819:PsiDirectoryNode" />
               <item name="bsinfo" type="462c0819:PsiDirectoryNode" />
-              <item name="dxram" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="migration" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="de" type="462c0819:PsiDirectoryNode" />
               <item name="hhu" type="462c0819:PsiDirectoryNode" />
               <item name="bsinfo" type="462c0819:PsiDirectoryNode" />
-              <item name="dxram" type="462c0819:PsiDirectoryNode" />
-              <item name="gradle" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxbuild" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="groovy" type="462c0819:PsiDirectoryNode" />
-              <item name="de" type="462c0819:PsiDirectoryNode" />
-              <item name="hhu" type="462c0819:PsiDirectoryNode" />
-              <item name="bsinfo" type="462c0819:PsiDirectoryNode" />
-              <item name="dxram" type="462c0819:PsiDirectoryNode" />
-              <item name="gradle" type="462c0819:PsiDirectoryNode" />
-              <item name="task" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="dxapp" type="b2602c69:ProjectViewProjectNode" />
-              <item name="dxram" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -3009,18 +2981,18 @@
       <workItem from="1535104749324" duration="9203000" />
       <workItem from="1535635549241" duration="1335000" />
       <workItem from="1535961473734" duration="6186000" />
-      <workItem from="1536063358798" duration="747000" />
+      <workItem from="1536063358798" duration="2352000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51496000" />
+    <option name="totallyTimeSpent" value="53101000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1999" y="61" width="1717" height="1048" extended-state="0" />
+    <frame x="1920" y="32" width="1920" height="1168" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.3070018" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27374598" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -3044,7 +3016,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.19509275" />
+      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.17395945" />
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
@@ -3060,16 +3032,10 @@
   <component name="VcsManagerConfiguration">
     <ignored-roots>
       <path value="$PROJECT_DIR$/../../dxgradle" />
+      <path value="$PROJECT_DIR$" />
     </ignored-roots>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/lookup/messages/JoinRequest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
-          <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../dxutils/src/main/java/de/hhu/bsinfo/dxutils/CRC16.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -3228,16 +3194,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/LargeBufferApp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/migration/MigrationService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2700">
@@ -3386,20 +3342,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="126" column="52" selection-start-line="126" selection-start-column="52" selection-end-line="126" selection-end-column="52" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/migration/MigrationManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
-          <caret line="185" column="49" lean-forward="true" selection-start-line="185" selection-start-column="49" selection-end-line="185" selection-end-column="49" />
+          <caret line="185" column="49" selection-start-line="185" selection-start-column="49" selection-end-line="185" selection-end-column="49" />
           <folding>
             <element signature="e#14853#14854#0" expanded="true" />
             <element signature="e#14889#14890#0" expanded="true" />
@@ -3409,15 +3355,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../../dxnet/src/main/java/de/hhu/bsinfo/dxnet/core/CoreConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="27" column="13" selection-start-line="27" selection-start-column="13" selection-end-line="27" selection-end-column="13" />
+        <state relative-caret-position="330">
+          <caret line="36" column="13" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../../dxram/src/main/java/de/hhu/bsinfo/dxram/net/NetworkComponentConfig.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="28" column="19" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="19" />
+        <state relative-caret-position="420">
+          <caret line="38" column="7" lean-forward="true" selection-start-line="38" selection-start-column="7" selection-end-line="38" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../dxutils/src/main/java/de/hhu/bsinfo/dxutils/serialization/ObjectSizeUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1080">
+          <caret line="90" column="33" lean-forward="true" selection-start-line="90" selection-start-column="33" selection-end-line="90" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/LargeBufferApp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/de/hhu/bsinfo/app/MigrationApp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="466">
+          <caret line="150" column="72" selection-start-line="150" selection-start-column="72" selection-end-line="150" selection-end-column="72" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

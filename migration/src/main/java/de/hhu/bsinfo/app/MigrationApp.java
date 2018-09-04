@@ -146,7 +146,9 @@ public class MigrationApp extends AbstractApplication {
 
         int workerCount = migrationService.getWorkerCount();
 
-        File logDir = new File(String.format("/home/krakowski/dxlogs/migration_%d_%d_%d-%d.csv", workerCount, iterations, numChunks, System.currentTimeMillis()));
+        String user = System.getProperty("user.name");
+
+        File logDir = new File(String.format("/home/%s/dxlogs/migration/migration_%d_%d_%d-%d.csv", user, workerCount, iterations, numChunks, System.currentTimeMillis()));
         logDir.getParentFile().mkdirs();
 
         try {
