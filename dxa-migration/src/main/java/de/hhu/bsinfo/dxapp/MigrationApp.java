@@ -1,5 +1,23 @@
 package de.hhu.bsinfo.dxapp;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import de.hhu.bsinfo.dxmem.data.ChunkByteArray;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
@@ -13,19 +31,6 @@ import de.hhu.bsinfo.dxram.migration.MigrationStatus;
 import de.hhu.bsinfo.dxram.migration.MigrationTicket;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
 import de.hhu.bsinfo.dxutils.NodeID;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 public class MigrationApp extends AbstractApplication {
 
@@ -56,20 +61,27 @@ public class MigrationApp extends AbstractApplication {
     }
 
     @Override
-    public boolean useConfigurationFile() {
-        return false;
-    }
+    public void main(final String[] p_args) {
+        Options options = new Options();
+        getOptions().forEach(options::addOption);
 
-    @Override
-    public void main(CommandLine p_commandLine) {
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cmd = null;
+        try {
+            cmd = parser.parse(options, p_args);
+        } catch (ParseException p_e) {
+            log.error("Application options could not be parsed", p_e);
+            return;
+        }
+
         ChunkService chunkService = getService(ChunkService.class);
         ChunkLocalService chunkLocalService = getService(ChunkLocalService.class);
         MigrationService migrationService = getService(MigrationService.class);
         BootService bootService = getService(BootService.class);
 
-        String totalSizeValue = p_commandLine.getOptionValue(ARG_TOTAL, DEFAULT_TOTAL_SIZE);
-        String chunkSizeValue = p_commandLine.getOptionValue(ARG_CHUNK, DEFAULT_CHUNK_SIZE);
-        String iterationsValue = p_commandLine.getOptionValue(ARG_ITERATIONS, DEFAULT_ITERATION_COUNT);
+        String totalSizeValue = cmd.getOptionValue(ARG_TOTAL, DEFAULT_TOTAL_SIZE);
+        String chunkSizeValue = cmd.getOptionValue(ARG_CHUNK, DEFAULT_CHUNK_SIZE);
+        String iterationsValue = cmd.getOptionValue(ARG_ITERATIONS, DEFAULT_ITERATION_COUNT);
 
         int iterations = Integer.parseInt(iterationsValue);
 
@@ -127,7 +139,8 @@ public class MigrationApp extends AbstractApplication {
 
             creationTimes[i] = System.currentTimeMillis() - then;
 
-            log.info("Migrating chunk range [{} , {}]", ChunkID.toHexString(firstChunk), ChunkID.toHexString(lastChunk + 1));
+            log.info("Migrating chunk range [{} , {}]", ChunkID.toHexString(firstChunk),
+                    ChunkID.toHexString(lastChunk + 1));
 
             then = System.currentTimeMillis();
             MigrationTicket<MigrationStatus> future = migrationService.migrateRange(firstChunk, lastChunk + 1, target);
@@ -145,7 +158,9 @@ public class MigrationApp extends AbstractApplication {
 
         String user = System.getProperty("user.name");
 
-        File logDir = new File(String.format("/home/%s/dxlogs/migration/migration_%d_%d_%d-%d.csv", user, workerCount, iterations, numChunks, System.currentTimeMillis()));
+        File logDir = new File(
+                String.format("/home/%s/dxlogs/migration/migration_%d_%d_%d-%d.csv", user, workerCount, iterations,
+                        numChunks, System.currentTimeMillis()));
         logDir.getParentFile().mkdirs();
 
         try {
@@ -170,27 +185,26 @@ public class MigrationApp extends AbstractApplication {
 
     }
 
-    @Override
     protected List<Option> getOptions() {
         return Arrays.asList(
                 Option.builder(ARG_TOTAL).argName(ARG_TOTAL)
-                    .hasArg()
-                    .desc("The total amount of data to send in bytes")
-                    .required(false)
-                    .type(Integer.class)
-                    .build(),
+                        .hasArg()
+                        .desc("The total amount of data to send in bytes")
+                        .required(false)
+                        .type(Integer.class)
+                        .build(),
                 Option.builder(ARG_CHUNK).argName(ARG_CHUNK)
-                    .hasArg()
-                    .desc("The size of a single chunk in bytes")
-                    .required(false)
-                    .type(Integer.class)
-                    .build(),
+                        .hasArg()
+                        .desc("The size of a single chunk in bytes")
+                        .required(false)
+                        .type(Integer.class)
+                        .build(),
                 Option.builder(ARG_ITERATIONS).argName(ARG_ITERATIONS)
-                    .hasArg()
-                    .desc("The iteration count")
-                    .required(false)
-                    .type(Integer.class)
-                    .build()
+                        .hasArg()
+                        .desc("The iteration count")
+                        .required(false)
+                        .type(Integer.class)
+                        .build()
         );
     }
 }
