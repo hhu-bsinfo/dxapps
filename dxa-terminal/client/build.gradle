@@ -1,0 +1,35 @@
+apply plugin: 'application'
+
+group 'de.hhu.bsinfo'
+version '1.0'
+
+mainClassName = 'de.hhu.bsinfo.dxterm.client.TerminalClient'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+installDist {
+    destinationDir = new File("${project.outputDir}/${project.name}")
+
+    preserve {
+        include '*'
+    }
+}
+
+dependencies {
+    implementation project(':common')
+    implementation 'jline:jline:2.14.6'
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.0'
+    implementation 'org.apache.logging.log4j:log4j-api:2.11.0'
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+}
+
+test {
+    useJUnitPlatform()
+}

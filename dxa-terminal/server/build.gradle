@@ -1,0 +1,42 @@
+apply plugin: 'java'
+
+group 'de.hhu.bsinfo'
+version '1.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+
+    maven {
+        url 'https://oss.jfrog.org/artifactory/oss-snapshot-local'
+    }
+}
+
+configurations {
+    providedImplementation
+}
+
+compileJava {
+    sourceSets.main.compileClasspath += configurations.providedImplementation
+}
+
+dependencies {
+    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0-SNAPSHOT'
+    implementation project(':common')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    archiveName 'dxa-dxterm.jar'
+
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
