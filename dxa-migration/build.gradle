@@ -33,7 +33,7 @@ dependencies {
 }
 
 jar {
-    archiveName 'dxa-migrate.jar'
+    archiveName 'dxa-migration.jar'
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }

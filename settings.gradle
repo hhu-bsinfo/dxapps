@@ -1,9 +1,5 @@
-include 'dxa-chunkbench'
-include 'dxa-helloworld'
-include 'dxa-migration'
-include 'dxa-terminal:client'
-include 'dxa-terminal:common'
-include 'dxa-terminal:server'
+include 'dxa-chunkbench', 'dxa-helloworld', 'dxa-migration',
+        'dxa-terminal:client', 'dxa-terminal:common', 'dxa-terminal:server'
 
 boolean isDevelop = true
 
