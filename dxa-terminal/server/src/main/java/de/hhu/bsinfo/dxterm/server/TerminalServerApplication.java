@@ -16,7 +16,19 @@
 
 package de.hhu.bsinfo.dxterm.server;
 
-import com.google.gson.annotations.Expose;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxram.boot.BootService;
@@ -37,20 +49,43 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 import de.hhu.bsinfo.dxram.tmp.TemporaryStorageService;
 import de.hhu.bsinfo.dxterm.TerminalException;
 import de.hhu.bsinfo.dxterm.TerminalSession;
-import de.hhu.bsinfo.dxterm.server.cmd.*;
-import org.apache.commons.cli.CommandLine;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrieralloc;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrierfree;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarriersignon;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarriersize;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrierstatus;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkMigrate;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkcreate;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkdump;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkget;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunklist;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkput;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkremove;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkremoverange;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkstatus;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdCompgrpls;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdCompgrpstatus;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdComptask;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdComptaskscript;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdLoggerlevel;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdLoginfo;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdLookuptree;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdMemdump;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdMetadata;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNameget;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNamelist;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNamereg;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeinfo;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodelist;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeshutdown;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodewait;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdStartApp;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdStatsprint;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpcreate;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpget;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpput;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpremove;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpstatus;
 
 /**
  * Terminal server running on a DXRAM peer as a DXRAM application. Thin clients can connect to the server and execute
@@ -61,11 +96,6 @@ import java.util.concurrent.Executors;
 public class TerminalServerApplication extends AbstractApplication implements TerminalSession.Listener,
         TerminalServiceAccessor {
     private static final Logger LOGGER = LogManager.getFormatterLogger(TerminalServerApplication.class.getSimpleName());
-
-    @Expose
-    private final int m_port = 22220;
-    @Expose
-    private final int m_maxSessions = 1;
 
     private TerminalServer m_terminalServer;
 
@@ -86,31 +116,32 @@ public class TerminalServerApplication extends AbstractApplication implements Te
     }
 
     @Override
-    public boolean useConfigurationFile() {
-        return true;
-    }
+    public void main(final String[] p_args) {
+        if (p_args.length < 2) {
+            LOGGER.error("Insufficient arguments: <port> <max sessions>");
+            return;
+        }
 
-    @Override
-    public void main(final CommandLine p_commandLine) {
+        int port = Integer.parseInt(p_args[0]);
+        int maxSessions = Integer.parseInt(p_args[1]);
+
         short nodeId = getService(BootService.class).getNodeID();
 
         m_terminalServer = new TerminalServer(nodeId);
         registerTerminalCommands();
 
-        m_threadPool = Executors.newFixedThreadPool(m_maxSessions);
+        m_threadPool = Executors.newFixedThreadPool(maxSessions);
 
         try {
-            m_socket = new ServerSocket(m_port);
+            m_socket = new ServerSocket(port);
             m_socket.setSoTimeout(1000);
         } catch (final IOException e) {
-
             LOGGER.error("Creating server socket failed", e);
-
             return;
         }
 
         while (m_run) {
-            if (m_sessions.size() == m_maxSessions) {
+            if (m_sessions.size() == maxSessions) {
                 try {
                     Thread.sleep(1000);
                 } catch (final InterruptedException ignored) {
@@ -128,23 +159,18 @@ public class TerminalServerApplication extends AbstractApplication implements Te
                 // accept timeout, just continue
                 continue;
             } catch (final IOException e) {
-
                 LOGGER.error("Accepting client connection failed", e);
-
                 continue;
             }
 
-
             LOGGER.debug("Accepted connection: %s", sock);
 
-
             de.hhu.bsinfo.dxterm.TerminalSession session;
+
             try {
                 session = new TerminalSession((byte) m_sessions.size(), sock, this);
             } catch (final TerminalException e) {
-
                 LOGGER.error("Creating terminal session failed", e);
-
 
                 try {
                     sock.close();
@@ -155,17 +181,13 @@ public class TerminalServerApplication extends AbstractApplication implements Te
                 continue;
             }
 
-
             LOGGER.info("Created terminal client session: %s", session);
-
 
             m_sessions.add(session);
             m_threadPool.submit(new TerminalServerSession(m_terminalServer, session, this));
 
-            if (m_sessions.size() == m_maxSessions) {
-
-                LOGGER.debug("Max session limit (%d) reached, further sessions won't be accepted", m_maxSessions);
-
+            if (m_sessions.size() == maxSessions) {
+                LOGGER.debug("Max session limit (%d) reached, further sessions won't be accepted", maxSessions);
             }
         }
     }
@@ -216,11 +238,11 @@ public class TerminalServerApplication extends AbstractApplication implements Te
 
         // TODO
         //  Is locking still available?
-//        if (isServiceAvailable(AbstractLockService.class)) {
-//            m_terminalServer.registerTerminalCommand(new TcmdChunklock());
-//            m_terminalServer.registerTerminalCommand(new TcmdChunklocklist());
-//            m_terminalServer.registerTerminalCommand(new TcmdChunkunlock());
-//        }
+        //        if (isServiceAvailable(AbstractLockService.class)) {
+        //            m_terminalServer.registerTerminalCommand(new TcmdChunklock());
+        //            m_terminalServer.registerTerminalCommand(new TcmdChunklocklist());
+        //            m_terminalServer.registerTerminalCommand(new TcmdChunkunlock());
+        //        }
 
         if (isServiceAvailable(LogService.class)) {
             m_terminalServer.registerTerminalCommand(new TcmdLoginfo());
