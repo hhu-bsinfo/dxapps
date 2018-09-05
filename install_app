@@ -1,0 +1,48 @@
+#!/bin/bash
+
+set -e
+
+usage() {
+  echo "Usage: $0 [-d destination] app script"
+  exit 1
+}
+
+DEST=/home/$USER
+
+while getopts d: option
+do
+  case "${option}"
+  in
+    d) DEST=${OPTARG};;
+  esac
+done
+shift $((OPTIND-1))
+
+APP=$1
+SCRIPT=$2
+
+if [ -z "${DEST}" ] || [ -z "${SCRIPT}" ] || [ -z "${APP}" ]; then
+    usage
+fi
+
+echo "Installing DXRam to ${DEST}"
+
+cd dxram
+
+./gradlew installDist -PoutputDir=${DEST}
+
+cd ../dxapps
+
+./gradlew ${APP}:jar
+./gradlew dxa-terminal:server:jar
+./gradlew dxa-terminal:client:installDist -PoutputDir=${DEST}
+
+cp ./${APP}/build/libs/${APP}.jar ${DEST}/dxram/dxapp
+cp ./dxa-terminal/server/build/libs/dxa-terminal.jar ${DEST}/dxram/dxapp
+
+cd ../cdepl
+
+./cdepl.sh $SCRIPT
+
+cd ..
+
