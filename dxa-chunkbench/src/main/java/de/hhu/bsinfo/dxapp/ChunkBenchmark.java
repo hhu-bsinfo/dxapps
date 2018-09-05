@@ -24,6 +24,10 @@ public class ChunkBenchmark extends AbstractApplication {
     public void main(final String[] p_args) {
         // TODO bootstrap wait for peers etc -> common helper class?
 
+        // TODO update ChunkIDRanges after load phase for benchmark -> get all chunk ranges from ChunkService
+
+        // TODO batch X objects on create/get/put calls -> add this to benchmark
+
         CommandLine.run(new BenchmarkCommand(new ChunkBenchmarkContext(getService(ChunkService.class),
                 getService(ChunkLocalService.class), getService(ChunkDebugService.class))), p_args);
     }
