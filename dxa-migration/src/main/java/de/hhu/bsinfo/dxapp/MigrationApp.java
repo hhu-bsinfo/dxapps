@@ -1,4 +1,4 @@
-package de.hhu.bsinfo.app;
+package de.hhu.bsinfo.dxapp;
 
 import de.hhu.bsinfo.dxmem.data.ChunkByteArray;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
@@ -25,10 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 public class MigrationApp extends AbstractApplication {
 
