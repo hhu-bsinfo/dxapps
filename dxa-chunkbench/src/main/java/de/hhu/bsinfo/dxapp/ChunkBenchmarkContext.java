@@ -5,20 +5,46 @@ import de.hhu.bsinfo.dxmem.core.CIDTableStatus;
 import de.hhu.bsinfo.dxmem.core.HeapStatus;
 import de.hhu.bsinfo.dxmem.core.LIDStoreStatus;
 import de.hhu.bsinfo.dxmem.data.AbstractChunk;
+import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkDebugService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
+import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 
 public class ChunkBenchmarkContext implements BenchmarkContext {
+    private final BootService m_boot;
     private final ChunkService m_default;
     private final ChunkLocalService m_local;
     private final ChunkDebugService m_debug;
+    private final NameserviceService m_name;
+    private final SynchronizationService m_sync;
 
-    public ChunkBenchmarkContext(final ChunkService p_default, final ChunkLocalService p_local,
-            final ChunkDebugService p_debug) {
+    public ChunkBenchmarkContext(final BootService p_boot, final ChunkService p_default,
+            final ChunkLocalService p_local, final ChunkDebugService p_debug, final NameserviceService p_name,
+            final SynchronizationService p_sync) {
+        m_boot = p_boot;
         m_default = p_default;
         m_local = p_local;
         m_debug = p_debug;
+        m_name = p_name;
+        m_sync = p_sync;
+    }
+
+    public BootService getBootService() {
+        return m_boot;
+    }
+
+    public ChunkService getChunkService() {
+        return m_default;
+    }
+
+    public NameserviceService getNameserviceService() {
+        return m_name;
+    }
+
+    public SynchronizationService getSyncService() {
+        return m_sync;
     }
 
     @Override
