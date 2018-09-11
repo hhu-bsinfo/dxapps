@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -15,11 +14,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.hhu.bsinfo.dxmem.data.ChunkByteArray;
-import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
@@ -30,11 +26,12 @@ import de.hhu.bsinfo.dxram.migration.MigrationService;
 import de.hhu.bsinfo.dxram.migration.MigrationStatus;
 import de.hhu.bsinfo.dxram.migration.MigrationTicket;
 import de.hhu.bsinfo.dxram.util.NodeCapabilities;
-import de.hhu.bsinfo.dxutils.NodeID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MigrationApp extends AbstractApplication {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private final Logger log = LogManager.getFormatterLogger(MigrationApp.class);
 
     private static final String DEFAULT_TOTAL_SIZE = String.valueOf(1024 * 1024 * 32);
 
@@ -69,8 +66,8 @@ public class MigrationApp extends AbstractApplication {
         CommandLine cmd = null;
         try {
             cmd = parser.parse(options, p_args);
-        } catch (ParseException p_e) {
-            log.error("Application options could not be parsed", p_e);
+        } catch (ParseException e) {
+            log.error("Application options could not be parsed", e);
             return;
         }
 
@@ -107,7 +104,7 @@ public class MigrationApp extends AbstractApplication {
         short source = bootService.getNodeID();
         short target = targetOptional.get();
 
-        log.info("Starting migration to {}", NodeID.toHexString(target));
+        log.info("Starting migration to %X", target);
 
         for (int i = 0; i < iterations; i++) {
             long firstChunk = 1L;
@@ -139,19 +136,19 @@ public class MigrationApp extends AbstractApplication {
 
             creationTimes[i] = System.currentTimeMillis() - then;
 
-            log.info("Migrating chunk range [{} , {}]", ChunkID.toHexString(firstChunk),
-                    ChunkID.toHexString(lastChunk + 1));
+            log.info("Migrating chunk range [%X , %X]", firstChunk, lastChunk + 1);
+
+            MigrationStatus status;
+            MigrationTicket ticket;
 
             then = System.currentTimeMillis();
-            MigrationTicket<MigrationStatus> future = migrationService.migrateRange(firstChunk, lastChunk + 1, target);
-
-            try {
-                future.getFuture().get();
-            } catch (InterruptedException | ExecutionException p_e) {
-                p_e.printStackTrace();
-            }
-
+            ticket = migrationService.migrateRange(firstChunk, lastChunk + 1, target);
+            status = migrationService.await(ticket);
             migrationTimes[i] = System.currentTimeMillis() - then;
+
+            if (status == MigrationStatus.ERROR) {
+                log.warn("Iteration %d was not successful", i);
+            }
         }
 
         int workerCount = migrationService.getWorkerCount();
@@ -174,8 +171,8 @@ public class MigrationApp extends AbstractApplication {
             writer.flush();
             writer.close();
 
-            log.info("Results written to {}", logDir.getAbsolutePath());
-        } catch (IOException p_e) {
+            log.info("Results written to %s", logDir.getAbsolutePath());
+        } catch (IOException e) {
             log.error("Couldn't write results to file");
         }
     }
@@ -185,7 +182,7 @@ public class MigrationApp extends AbstractApplication {
 
     }
 
-    protected List<Option> getOptions() {
+    private static List<Option> getOptions() {
         return Arrays.asList(
                 Option.builder(ARG_TOTAL).argName(ARG_TOTAL)
                         .hasArg()

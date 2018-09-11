@@ -18,8 +18,16 @@ repositories {
     }
 }
 
+configurations {
+    providedImplementation
+}
+
+compileJava {
+    sourceSets.main.compileClasspath += configurations.providedImplementation
+}
+
 dependencies {
-    implementation 'de.hhu.bsinfo:dxram:0.5.0-SNAPSHOT'
+    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0-SNAPSHOT'
 
     testImplementation 'junit:junit:4.12'
 }
