@@ -1,5 +1,7 @@
 package de.hhu.bsinfo.dxapp;
 
+import java.util.Arrays;
+
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
@@ -27,7 +29,8 @@ public class HelloWorld extends AbstractApplication {
         BootService bootService = getService(BootService.class);
 
         System.out.println("Hello, I am application " + getApplicationName() + " on a peer and my node id is " +
-                NodeID.toHexString(bootService.getNodeID()) + " with " + p_args.length + " cmd args");
+                NodeID.toHexString(bootService.getNodeID()) + " with " + p_args.length + " cmd args: " +
+                Arrays.toString(p_args));
 
         // Put your application code running on the DXRAM node/peer here
     }
