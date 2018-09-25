@@ -12,6 +12,10 @@ if (isDevelop && new File('../dxbuild').exists()) {
     includeBuild '../dxbuild'
 }
 
+if (isDevelop && new File('../dxlog').exists()) {
+    includeBuild '../dxlog'
+}
+
 if (isDevelop && new File('../dxram').exists()) {
     includeBuild '../dxram'
 }
