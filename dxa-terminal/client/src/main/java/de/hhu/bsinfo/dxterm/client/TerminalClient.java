@@ -16,14 +16,11 @@
 
 package de.hhu.bsinfo.dxterm.client;
 
-import de.hhu.bsinfo.dxterm.*;
 import jline.console.ConsoleReader;
 import jline.console.UserInterruptException;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.StringsCompleter;
 import jline.console.history.FileHistory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +29,22 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import de.hhu.bsinfo.dxterm.TerminalCmdArgCompleter;
+import de.hhu.bsinfo.dxterm.TerminalColor;
+import de.hhu.bsinfo.dxterm.TerminalCommandDone;
+import de.hhu.bsinfo.dxterm.TerminalCommandString;
+import de.hhu.bsinfo.dxterm.TerminalException;
+import de.hhu.bsinfo.dxterm.TerminalLogin;
+import de.hhu.bsinfo.dxterm.TerminalLogout;
+import de.hhu.bsinfo.dxterm.TerminalReqStdin;
+import de.hhu.bsinfo.dxterm.TerminalSession;
+import de.hhu.bsinfo.dxterm.TerminalStdinData;
+import de.hhu.bsinfo.dxterm.TerminalStdoutData;
+import de.hhu.bsinfo.dxterm.TerminalStyle;
 
 /**
  * Standalone thin client application to login to a terminal server running on a DXRAM peer
@@ -62,6 +75,8 @@ public final class TerminalClient implements TerminalSession.Listener {
      *         If either creating the terminal environment or connecting to the server failed
      */
     private TerminalClient(final String p_hostname, final int p_port) throws TerminalException {
+        System.out.println("Remote: " + p_hostname + ':' + p_port);
+
         try {
             m_consoleReader = new ConsoleReader();
             m_consoleReader.setBellEnabled(false);
@@ -185,7 +200,8 @@ public final class TerminalClient implements TerminalSession.Listener {
             // add completers for commands
             List<String> list = login.getCmdNames();
             Collections.addAll(list, m_localCommands);
-            ArgumentCompleter comp = new ArgumentCompleter(new StringsCompleter(list), new TerminalCmdArgCompleter(m_consoleReader, m_session));
+            ArgumentCompleter comp = new ArgumentCompleter(new StringsCompleter(list),
+                    new TerminalCmdArgCompleter(m_consoleReader, m_session));
             // if strict, a failure on a completion blocks all completions on further arguments
             comp.setStrict(false);
             m_consoleReader.addCompleter(comp);
@@ -395,8 +411,10 @@ public final class TerminalClient implements TerminalSession.Listener {
      */
     private static void printHelp() {
         System.out.println(
-                "Type '?' or 'help' to print this message\n" + "> To list all built in terminal commands: 'list'\n" + "> 'clear' to clear the screen\n" +
-                        "> 'exit' to close and shut down the current terminal\n" + "> Get help about a terminal command, example: 'help nodelist'\n" +
+                "Type '?' or 'help' to print this message\n" + "> To list all built in terminal commands: 'list'\n" +
+                        "> 'clear' to clear the screen\n" +
+                        "> 'exit' to close and shut down the current terminal\n" +
+                        "> Get help about a terminal command, example: 'help nodelist'\n" +
                         "> Execute built in terminal commands, e.g. 'nodelist' or with arguments separated by spaces 'nodelist \"peer\"'");
     }
 
@@ -410,9 +428,11 @@ public final class TerminalClient implements TerminalSession.Listener {
      * @param p_style
      *         Text style.
      */
-    private static void changeConsoleColor(final TerminalColor p_color, final TerminalColor p_backgroundColor, final TerminalStyle p_style) {
+    private static void changeConsoleColor(final TerminalColor p_color, final TerminalColor p_backgroundColor,
+            final TerminalStyle p_style) {
         if (p_backgroundColor != TerminalColor.DEFAULT) {
-            System.out.printf("\033[%d;%d;%dm", p_style.ordinal(), p_color.ordinal() + 30, p_backgroundColor.ordinal() + 40);
+            System.out.printf("\033[%d;%d;%dm", p_style.ordinal(), p_color.ordinal() + 30,
+                    p_backgroundColor.ordinal() + 40);
         } else if (p_color != TerminalColor.DEFAULT) {
             System.out.printf("\033[%d;%dm", p_style.ordinal(), p_color.ordinal() + 30);
         } else {

@@ -140,6 +140,8 @@ public class TerminalServerApplication extends AbstractApplication implements Te
             return;
         }
 
+        LOGGER.info("Started server on port %d, max sessions %d", port, maxSessions);
+
         while (m_run) {
             if (m_sessions.size() == maxSessions) {
                 try {

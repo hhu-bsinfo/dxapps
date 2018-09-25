@@ -16,16 +16,16 @@
 
 package de.hhu.bsinfo.dxterm.server.cmd;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxterm.TerminalCommandString;
 import de.hhu.bsinfo.dxterm.server.AbstractTerminalCommand;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdin;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdout;
 import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Starts an application.
@@ -46,22 +46,25 @@ public class TcmdStartApp extends AbstractTerminalCommand {
     }
 
     @Override
-    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout, final TerminalServerStdin p_stdin,
-                     final TerminalServiceAccessor p_services) {
-        String name = p_cmd.getNamedArgument(ARG_NAME);
+    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout,
+            final TerminalServerStdin p_stdin, final TerminalServiceAccessor p_services) {
+        int argCount = p_cmd.getArgc();
 
-        if (name.isEmpty()) {
+        if (argCount < 1) {
             p_stdout.printlnErr("No application name specified");
             return;
         }
 
+        String name = p_cmd.getArgument(0);
+
         ApplicationService appService = p_services.getService(ApplicationService.class);
 
-        int argCount = p_cmd.getArgc();
+        String[] args;
 
-        String args[] = null;
         if (argCount > 1) {
             args = Arrays.copyOfRange(p_cmd.getArgs(), 1, argCount);
+        } else {
+            args = new String[0];
         }
 
         if (!appService.startApplication(name, args)) {
