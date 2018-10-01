@@ -26,6 +26,7 @@ import de.hhu.bsinfo.dxterm.server.AbstractTerminalCommand;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdin;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdout;
 import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
+import de.hhu.bsinfo.dxutils.NodeID;
 
 /**
  * Starts an application.
@@ -37,11 +38,9 @@ public class TcmdAppRun extends AbstractTerminalCommand {
         super("apprun");
     }
 
-    private static final String ARG_NAME = "name";
-
     @Override
     public String getHelp() {
-        return "Starts an application\n" + "Usage: apprun <name> [args]\n" +
+        return "Starts an application\n" + "Usage: apprun [nid] <name> [args]\n" +
                 "  name: The application's name";
     }
 
@@ -55,20 +54,44 @@ public class TcmdAppRun extends AbstractTerminalCommand {
             return;
         }
 
-        String name = p_cmd.getArgument(0);
+        // reflect on first argument
+        String arg1 = p_cmd.getArgument(0);
+
+        short nid;
+        String name;
+        int appArgStartIdx;
+
+        try {
+            nid = p_cmd.getArgument(0, NodeID::parse, NodeID.INVALID_ID);
+            name = p_cmd.getArgument(1);
+            appArgStartIdx = 2;
+        } catch (NumberFormatException e) {
+            nid = NodeID.INVALID_ID;
+            // not a nid, must be name
+            name = arg1;
+            appArgStartIdx = 1;
+        }
 
         ApplicationService appService = p_services.getService(ApplicationService.class);
 
         String[] args;
 
-        if (argCount > 1) {
-            args = Arrays.copyOfRange(p_cmd.getArgs(), 1, argCount);
+        if (argCount > appArgStartIdx) {
+            args = Arrays.copyOfRange(p_cmd.getArgs(), appArgStartIdx, argCount);
         } else {
             args = new String[0];
         }
 
-        if (!appService.startApplication(name, args)) {
-            p_stdout.printlnErr("The application could not be started");
+        System.out.println(nid + " " + name + " " + appArgStartIdx);
+
+        if (nid != NodeID.INVALID_ID) {
+            if (!appService.startApplication(nid, name, args)) {
+                p_stdout.printflnErr("Starting application on remote peer %s failed", NodeID.toHexString(nid));
+            }
+        } else {
+            if (!appService.startApplication(name, args)) {
+                p_stdout.printflnErr("Starting application failed");
+            }
         }
     }
 
