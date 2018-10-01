@@ -2,6 +2,10 @@ package de.hhu.bsinfo.dxapp;
 
 import picocli.CommandLine;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,11 +26,12 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxmem.data.ChunkIDRanges;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierStatus;
+import de.hhu.bsinfo.dxram.util.NodeRole;
 import de.hhu.bsinfo.dxutils.NodeID;
 
 @CommandLine.Command(
         name = "ChunkBenchmark",
-        customSynopsis = "@|bold ChunkBenchmark|@ @|yellow <benchmark node idx> <benchmark total nodes> " +
+        customSynopsis = "@|bold ChunkBenchmark|@ @|yellow <nodeIdx> <otherNodes> " +
                 "WORKLOAD|@ [...]",
         description = "Run a benchmark to evaluate the ChunkService with different workloads",
         subcommands = {
@@ -49,18 +54,20 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     @CommandLine.Parameters(
             index = "0",
-            paramLabel = "<benchmark node idx>",
-            description = "Node idx for benchmark (0, 1, 2, ...) to identify benchmark nodes")
-    private int m_benchmarkNodeId;
+            paramLabel = "<nodeIdx>",
+            description = "Always set this to 0 when running the application.")
+    private int m_nodeIdx;
 
     @CommandLine.Parameters(
             index = "1",
-            paramLabel = "<benchmark total nodes>",
-            description = "Total nodes involved in benchmark")
-    private int m_totalBenchmarkNodes;
+            paramLabel = "<otherNodes>",
+            description = "Either a single number X (e.g. 2) to run the benchmark on any additional X peers or a " +
+                    "comma separated list of hex NIDs (e.g. F3FA,B1D1) not including the current node")
+    private String m_otherNodes;
 
     private final ChunkBenchmarkContext m_context;
 
+    private List<Short> m_nodeOtherList;
     private int m_barrierId = BarrierID.INVALID_ID;
 
     public BenchmarkCommand(final ChunkBenchmarkContext p_context) {
@@ -74,10 +81,7 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     @Override
     public void runBenchmark(final Benchmark p_benchmark) {
-        LOGGER.info("Running chunk benchmark, my node idx %d of %d nodes", m_benchmarkNodeId, m_totalBenchmarkNodes);
-
-        if (m_benchmarkNodeId >= m_totalBenchmarkNodes) {
-            LOGGER.error("Invalid parameter(s) specified, node idx >= total nodes");
+        if (!bootstrapRootWithArgs()) {
             return;
         }
 
@@ -90,12 +94,99 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
         LOGGER.info("Finished chunk benchmark");
     }
 
+    private boolean bootstrapRootWithArgs() {
+        // only first peer has to bootstrap
+        if (m_nodeIdx != 0) {
+            return true;
+        }
+
+        // reflect: total node count or list of NIDs
+        int totalNodeCount;
+        m_nodeOtherList = new ArrayList<>();
+
+        try {
+            totalNodeCount = Integer.parseInt(m_otherNodes);
+        } catch (NumberFormatException e) {
+            // try node list instead
+            String[] tokens = m_otherNodes.split(",");
+
+            for (String tok : tokens) {
+                m_nodeOtherList.add(NodeID.parse(tok));
+            }
+
+            totalNodeCount = m_nodeOtherList.size();
+        }
+
+        List<Short> nodesAvail = m_context.getBootService().getOnlinePeerNodeIDs();
+
+        if (m_nodeOtherList.isEmpty()) {
+            if (totalNodeCount <= 0) {
+                LOGGER.error("Invalid total node count specified: %d", totalNodeCount);
+                return false;
+            }
+
+            // if no NIDs specified, pick available nodes instead
+            if (totalNodeCount > nodesAvail.size()) {
+                LOGGER.error("Not enough peers available (%d) to run benchmark with %d nodes", nodesAvail.size(),
+                        totalNodeCount);
+                return false;
+            }
+
+            // always run on current node when started like this
+            m_nodeOtherList.add(m_context.getBootService().getNodeID());
+            totalNodeCount--;
+
+            int idx = 0;
+
+            while (totalNodeCount > 0) {
+                if (m_nodeOtherList.get(idx) != m_context.getBootService().getNodeID()) {
+                    m_nodeOtherList.add(m_nodeOtherList.get(idx));
+                    idx++;
+                    totalNodeCount--;
+                }
+            }
+        } else {
+            // check if all nodes are available
+            for (short nid : m_nodeOtherList) {
+                if (!m_context.getBootService().isNodeOnline(nid)) {
+                    LOGGER.error("Node %s is not online", NodeID.toHexString(nid));
+                    return false;
+                }
+
+                if (m_context.getBootService().getNodeRole(nid) != NodeRole.PEER) {
+                    LOGGER.error("Node %s is not a peer", NodeID.toHexString(nid));
+                    return false;
+                }
+            }
+        }
+
+        LOGGER.info("Bootstrapper: running chunk benchmark with nodes: %s", NodeID.nodeIDArrayToString(
+                m_nodeOtherList));
+        // bootstrapper deploys further applications on remote peers
+
+        int nodeIdx = 1;
+
+        for (short nid : m_nodeOtherList) {
+            LOGGER.debug("Deploying benchmark to remote: %s", NodeID.toHexString(nid));
+
+            String[] args = Arrays.copyOf(m_context.getAppArgs(), m_context.getAppArgs().length);
+            args[0] = Integer.toString(nodeIdx);
+            m_context.getApplicationService().startApplication(nid, ChunkBenchmark.class.getName(), args);
+        }
+
+        return true;
+    }
+
+    private void deployRemoteApplications() {
+
+    }
+
     private BarrierStatus syncBarrier() {
         LOGGER.debug("syncBarrier enter");
 
-        if (m_benchmarkNodeId == 0) {
+        if (m_nodeIdx == 0) {
             if (m_barrierId == BarrierID.INVALID_ID) {
-                m_barrierId = m_context.getSyncService().barrierAllocate(m_totalBenchmarkNodes);
+                m_barrierId = m_context.getSyncService().barrierAllocate(m_nodeOtherList.size());
                 m_context.getNameserviceService().register(m_barrierId, NAMESERVICE_BARRIER_NAME);
             }
         } else {

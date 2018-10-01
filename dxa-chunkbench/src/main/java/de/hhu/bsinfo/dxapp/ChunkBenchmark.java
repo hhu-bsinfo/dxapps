@@ -3,6 +3,7 @@ package de.hhu.bsinfo.dxapp;
 import picocli.CommandLine;
 
 import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkDebugService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
@@ -25,12 +26,8 @@ public class ChunkBenchmark extends AbstractApplication {
 
     @Override
     public void main(final String[] p_args) {
-        // TODO check if node idx 0 -> start remote chunk benchmarks on other nodes with different arguments
-        // to deploy our "slaves"
-        //getService(ApplicationService.class).start
-
-        CommandLine.run(new BenchmarkCommand(new ChunkBenchmarkContext(getService(BootService.class),
-                getService(ChunkService.class), getService(ChunkLocalService.class),
+        CommandLine.run(new BenchmarkCommand(new ChunkBenchmarkContext(p_args, getService(ApplicationService.class),
+                getService(BootService.class), getService(ChunkService.class), getService(ChunkLocalService.class),
                 getService(ChunkDebugService.class), getService(NameserviceService.class),
                 getService(SynchronizationService.class))), p_args);
     }
