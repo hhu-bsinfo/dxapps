@@ -166,6 +166,13 @@ public final class TerminalClient implements TerminalSession.Listener {
                 command = "";
             }
 
+            // ctrl + d
+            if (command == null) {
+                quit();
+                System.out.println();
+                break;
+            }
+
             loop = evaluate(command);
         }
     }
