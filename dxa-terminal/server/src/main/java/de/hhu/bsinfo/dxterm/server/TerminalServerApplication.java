@@ -79,7 +79,7 @@ import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeinfo;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodelist;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeshutdown;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodewait;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdStartApp;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppRun;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdStatsprint;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpcreate;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpget;
@@ -297,7 +297,7 @@ public class TerminalServerApplication extends AbstractApplication implements Te
         }
 
         if (isServiceAvailable(ApplicationService.class)) {
-            m_terminalServer.registerTerminalCommand(new TcmdStartApp());
+            m_terminalServer.registerTerminalCommand(new TcmdAppRun());
         }
     }
 }

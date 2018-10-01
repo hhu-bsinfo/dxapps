@@ -32,16 +32,16 @@ import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
  *
  * @author Filip Krakowski, Filip.Krakowski@Uni-Duesseldorf.de, 22.08.2018
  */
-public class TcmdStartApp extends AbstractTerminalCommand {
-    public TcmdStartApp() {
-        super("startapp");
+public class TcmdAppRun extends AbstractTerminalCommand {
+    public TcmdAppRun() {
+        super("apprun");
     }
 
     private static final String ARG_NAME = "name";
 
     @Override
     public String getHelp() {
-        return "Starts an application\n" + "Usage: startapp <name> [args]\n" +
+        return "Starts an application\n" + "Usage: apprun <name> [args]\n" +
                 "  name: The application's name";
     }
 
