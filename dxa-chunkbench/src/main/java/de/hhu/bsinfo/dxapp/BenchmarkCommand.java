@@ -22,11 +22,13 @@ import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxmem.data.ChunkIDRanges;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierStatus;
+import de.hhu.bsinfo.dxutils.NodeID;
 
 @CommandLine.Command(
-        name = "benchmark",
-        customSynopsis = "@|bold dxmem benchmark|@ @|yellow heapSize WORKLOAD|@ [...]",
-        description = "Run a benchmark to evaluate DXMem with different workloads",
+        name = "ChunkBenchmark",
+        customSynopsis = "@|bold ChunkBenchmark|@ @|yellow <benchmark node idx> <benchmark total nodes> " +
+                "WORKLOAD|@ [...]",
+        description = "Run a benchmark to evaluate the ChunkService with different workloads",
         subcommands = {
                 FacebookA.class,
                 FacebookB.class,
@@ -47,8 +49,8 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     @CommandLine.Parameters(
             index = "0",
-            paramLabel = "<benchmark node id>",
-            description = "Node id for benchmark (0, 1, 2, ...) to identify benchmark nodes")
+            paramLabel = "<benchmark node idx>",
+            description = "Node idx for benchmark (0, 1, 2, ...) to identify benchmark nodes")
     private int m_benchmarkNodeId;
 
     @CommandLine.Parameters(
@@ -72,14 +74,25 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     @Override
     public void runBenchmark(final Benchmark p_benchmark) {
+        LOGGER.info("Running chunk benchmark, my node idx %d of %d nodes", m_benchmarkNodeId, m_totalBenchmarkNodes);
+
+        if (m_benchmarkNodeId >= m_totalBenchmarkNodes) {
+            LOGGER.error("Invalid parameter(s) specified, node idx >= total nodes");
+            return;
+        }
+
         syncBarrier();
         ChunkIDRanges ranges = collectAvailableChunkIDs();
         syncBarrier();
         executeBenchmark(p_benchmark, ranges);
         syncBarrier();
+
+        LOGGER.info("Finished chunk benchmark");
     }
 
     private BarrierStatus syncBarrier() {
+        LOGGER.debug("syncBarrier enter");
+
         if (m_benchmarkNodeId == 0) {
             if (m_barrierId == BarrierID.INVALID_ID) {
                 m_barrierId = m_context.getSyncService().barrierAllocate(m_totalBenchmarkNodes);
@@ -102,7 +115,8 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
         ChunkIDRanges ranges = new ChunkIDRanges();
 
         // collect from ALL nodes to also cover storage only instances which don't run this benchmark
-        for (short nodeId : m_context.getBootService().getOnlineNodeIDs()) {
+        for (short nodeId : m_context.getBootService().getOnlinePeerNodeIDs()) {
+            LOGGER.debug("Collect from %s", NodeID.toHexString(nodeId));
             ranges.add(m_context.getChunkService().cidStatus().getAllLocalChunkIDRanges(nodeId));
             ranges.add(m_context.getChunkService().cidStatus().getAllMigratedChunkIDRanges(nodeId));
 
