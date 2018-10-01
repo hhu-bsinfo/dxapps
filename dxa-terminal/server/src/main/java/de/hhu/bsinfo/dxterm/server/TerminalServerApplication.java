@@ -49,6 +49,8 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 import de.hhu.bsinfo.dxram.tmp.TemporaryStorageService;
 import de.hhu.bsinfo.dxterm.TerminalException;
 import de.hhu.bsinfo.dxterm.TerminalSession;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppList;
+import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppRun;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrieralloc;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrierfree;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarriersignon;
@@ -79,7 +81,6 @@ import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeinfo;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodelist;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeshutdown;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodewait;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppRun;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdStatsprint;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpcreate;
 import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpget;
@@ -297,6 +298,7 @@ public class TerminalServerApplication extends AbstractApplication implements Te
         }
 
         if (isServiceAvailable(ApplicationService.class)) {
+            m_terminalServer.registerTerminalCommand(new TcmdAppList());
             m_terminalServer.registerTerminalCommand(new TcmdAppRun());
         }
     }
