@@ -11,6 +11,7 @@ import de.hhu.bsinfo.dxram.chunk.ChunkDebugService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxram.stats.StatisticsService;
 import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 
 public class ChunkBenchmarkContext implements BenchmarkContext {
@@ -21,11 +22,13 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
     private final ChunkLocalService m_local;
     private final ChunkDebugService m_debug;
     private final NameserviceService m_name;
+    private final StatisticsService m_statistics;
     private final SynchronizationService m_sync;
 
     public ChunkBenchmarkContext(final String[] p_appArgs, final ApplicationService p_application,
             final BootService p_boot, final ChunkService p_default, final ChunkLocalService p_local,
-            final ChunkDebugService p_debug, final NameserviceService p_name, final SynchronizationService p_sync) {
+            final ChunkDebugService p_debug, final NameserviceService p_name, final StatisticsService p_statistics,
+            final SynchronizationService p_sync) {
         m_appArgs = p_appArgs;
         m_app = p_application;
         m_boot = p_boot;
@@ -33,6 +36,7 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
         m_local = p_local;
         m_debug = p_debug;
         m_name = p_name;
+        m_statistics = p_statistics;
         m_sync = p_sync;
     }
 
@@ -54,6 +58,10 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
 
     public NameserviceService getNameserviceService() {
         return m_name;
+    }
+
+    public StatisticsService getStatisticsService() {
+        return m_statistics;
     }
 
     public SynchronizationService getSyncService() {

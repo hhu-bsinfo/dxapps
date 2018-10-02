@@ -86,10 +86,10 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
         }
 
         syncBarrier();
-        ChunkIDRanges ranges = collectAvailableChunkIDs();
+        executeBenchmark(p_benchmark);
         syncBarrier();
-        executeBenchmark(p_benchmark, ranges);
-        syncBarrier();
+        deleteBarrier();
+        printStatistics();
 
         LOGGER.info("Finished chunk benchmark");
     }
@@ -97,8 +97,11 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
     private boolean bootstrapRootWithArgs() {
         // only first peer has to bootstrap
         if (m_nodeIdx != 0) {
+            LOGGER.debug("Not bootstrap peer (%d, skip bootstrapping", m_nodeIdx);
             return true;
         }
+
+        LOGGER.debug("I am bootstrap peer");
 
         // reflect: total node count or list of NIDs
         int totalNodeCount;
@@ -125,25 +128,22 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
                 return false;
             }
 
-            // if no NIDs specified, pick available nodes instead
-            if (totalNodeCount > nodesAvail.size()) {
+            // if no NIDs specified, pick available nodes instead (not counting current node)
+            if (totalNodeCount > nodesAvail.size() - 1) {
                 LOGGER.error("Not enough peers available (%d) to run benchmark with %d nodes", nodesAvail.size(),
                         totalNodeCount);
                 return false;
             }
 
-            // always run on current node when started like this
-            m_nodeOtherList.add(m_context.getBootService().getNodeID());
-            totalNodeCount--;
-
             int idx = 0;
 
             while (totalNodeCount > 0) {
-                if (m_nodeOtherList.get(idx) != m_context.getBootService().getNodeID()) {
-                    m_nodeOtherList.add(m_nodeOtherList.get(idx));
-                    idx++;
+                if (nodesAvail.get(idx) != m_context.getBootService().getNodeID()) {
+                    m_nodeOtherList.add(nodesAvail.get(idx));
                     totalNodeCount--;
                 }
+
+                idx++;
             }
         } else {
             // check if all nodes are available
@@ -177,21 +177,23 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
         return true;
     }
 
-    private void deployRemoteApplications() {
-
-    }
-
     private BarrierStatus syncBarrier() {
         LOGGER.debug("syncBarrier enter");
 
         if (m_nodeIdx == 0) {
             if (m_barrierId == BarrierID.INVALID_ID) {
-                m_barrierId = m_context.getSyncService().barrierAllocate(m_nodeOtherList.size());
+                // other peers + bootstrap peer
+                m_barrierId = m_context.getSyncService().barrierAllocate(m_nodeOtherList.size() + 1);
                 m_context.getNameserviceService().register(m_barrierId, NAMESERVICE_BARRIER_NAME);
             }
         } else {
-            if (m_barrierId == BarrierID.INVALID_ID) {
+            while (m_barrierId == BarrierID.INVALID_ID) {
                 m_barrierId = (int) m_context.getNameserviceService().getChunkID(NAMESERVICE_BARRIER_NAME, -1);
+
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException ignored) {
+                }
             }
         }
 
@@ -215,19 +217,38 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
             ranges.remove(ChunkID.getChunkID(nodeId, 0));
         }
 
+        LOGGER.debug("Collected chunk ranges for benchmark: %s", ranges);
+
         return ranges;
     }
 
-    private void executeBenchmark(final Benchmark p_benchmark, final ChunkIDRanges p_ranges) {
+    private void executeBenchmark(final Benchmark p_benchmark) {
         LOGGER.info("Executing benchmark '%s'", p_benchmark.getName());
 
         for (BenchmarkPhase phase : p_benchmark.getPhases()) {
+            // collect chunk ranges before every phase to ensure that all chunks are available (including remote ones)
+            // e.g. before load phase: existing chunks (of previous benchmark runs), load phase -> local on each node,
+            // collect chunks from load phase to make them available in benchmark phase, benchmark phase with all
+            // chunks
+            ChunkIDRanges ranges = collectAvailableChunkIDs();
+
             LOGGER.info("Executing benchmark phase '%s'...", phase.getName());
-            phase.execute(m_context, p_ranges);
+            phase.execute(m_context, ranges);
             LOGGER.info("Results of benchmark phase '%s'...", phase.getName());
             phase.printResults(m_context);
         }
 
         LOGGER.info("Finished executing benchmark '%s'", p_benchmark.getName());
+    }
+
+    private void deleteBarrier() {
+        if (m_nodeIdx == 0) {
+            m_context.getNameserviceService().register(BarrierID.INVALID_ID, NAMESERVICE_BARRIER_NAME);
+            m_context.getSyncService().barrierFree(m_barrierId);
+        }
+    }
+
+    private void printStatistics() {
+        m_context.getStatisticsService().getManager().printStatistics(System.out);
     }
 }

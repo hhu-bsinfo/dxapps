@@ -11,6 +11,7 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
+import de.hhu.bsinfo.dxram.stats.StatisticsService;
 import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 
 public class ChunkBenchmark extends AbstractApplication {
@@ -29,7 +30,7 @@ public class ChunkBenchmark extends AbstractApplication {
         CommandLine.run(new BenchmarkCommand(new ChunkBenchmarkContext(p_args, getService(ApplicationService.class),
                 getService(BootService.class), getService(ChunkService.class), getService(ChunkLocalService.class),
                 getService(ChunkDebugService.class), getService(NameserviceService.class),
-                getService(SynchronizationService.class))), p_args);
+                getService(StatisticsService.class), getService(SynchronizationService.class))), p_args);
     }
 
     @Override
