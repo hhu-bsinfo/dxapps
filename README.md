@@ -4,11 +4,11 @@
 
 The applications in this repository are part of the [DXRAM](https://github.com/hhu-bsinfo/dxram) key-value storage.
 
-[ChunkBench](dxa-chunkbench/README.md): A benchmark similar to the Yahoo! Cloud Service Benchmark to test and determine
-the performance of DXRAM's key-value storage
-[HelloWorld](dxa-helloworld/README.md): Minimal example to get started with developing applications for DXRAM
-[Migration](dxa-migration/README.md): Test and benchmark DXRAM's migration
-[Terminal](dxa-terminal/README.md): Terminal server and client which provides a CLI to connect to DXRAM peers and run
+* [ChunkBench](dxa-chunkbench/README.md): A benchmark similar to the Yahoo! Cloud Service Benchmark to test and
+determine the performance of DXRAM's key-value storage
+* [HelloWorld](dxa-helloworld/README.md): Minimal example to get started with developing applications for DXRAM
+* [Migration](dxa-migration/README.md): Test and benchmark DXRAM's migration
+* [Terminal](dxa-terminal/README.md): Terminal server and client which provides a CLI to connect to DXRAM peers and run
  commands on them.
 
 # Compiling
