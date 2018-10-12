@@ -23,7 +23,7 @@ compileJava {
 
 dependencies {
     implementation project(':dxa-terminal:common')
-    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0-SNAPSHOT'
+    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0' + (Boolean.valueOf(System.getProperty('snapshot')) ? '-SNAPSHOT' : '')
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.0'

@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0-SNAPSHOT'
+    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0' + (Boolean.valueOf(System.getProperty('snapshot')) ? '-SNAPSHOT' : '')
 
     testImplementation 'junit:junit:4.12'
 }
