@@ -27,7 +27,7 @@ compileJava {
 }
 
 dependencies {
-    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0' + (Boolean.valueOf(System.getProperty('snapshot')) ? '-SNAPSHOT' : '')
+    providedImplementation 'de.hhu.bsinfo:dxram:0.5.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
 
     testImplementation 'junit:junit:4.12'
 }
