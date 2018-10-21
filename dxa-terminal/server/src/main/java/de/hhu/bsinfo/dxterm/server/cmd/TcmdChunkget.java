@@ -130,7 +130,7 @@ public class TcmdChunkget extends AbstractTerminalCommand {
 
             ChunkService chunk = p_services.getService(ChunkService.class);
 
-            if (chunk.get().get(dataStructure) != 1) {
+            if (!chunk.get().get(dataStructure)) {
                 p_stdout.printflnErr("Getting data structure 0x%X failed: %s", cid, chunk.status());
                 return;
             }
