@@ -4,3 +4,5 @@ build/
 out/
 *.iml
 gradlew.bat
+*.ipr
+*.iws
