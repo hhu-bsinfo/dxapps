@@ -84,29 +84,27 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
     }
 
     @Override
-    public long create(final int p_size) {
-        long[] result = new long[1];
-        m_local.createLocal().create(result, 1, p_size);
-        return result[0];
+    public void create(long[] p_cids, int[] p_sizes) {
+        m_local.createLocal().createSizes(p_cids, p_sizes);
     }
 
     @Override
-    public void dump(final String p_outFile) {
-        m_debug.dump().dumpChunkMemory(p_outFile);
+    public void dump(String p_outFile) {
+
     }
 
     @Override
-    public void get(final AbstractChunk p_chunk) {
-        m_default.get().get(p_chunk);
+    public void get(AbstractChunk[] p_chunks) {
+        m_default.get().get(p_chunks);
     }
 
     @Override
-    public void put(final AbstractChunk p_chunk) {
-        m_default.put().put(p_chunk);
+    public void put(AbstractChunk[] p_chunks) {
+        m_default.put().put(p_chunks);
     }
 
     @Override
-    public void remove(final AbstractChunk p_chunk) {
-        m_default.remove().remove(p_chunk);
+    public void remove(AbstractChunk[] p_chunks) {
+        m_default.remove().remove(p_chunks);
     }
 }
