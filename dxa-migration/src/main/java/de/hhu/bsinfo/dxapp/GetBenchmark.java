@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GetBenchmark extends AbstractApplication {
 
-    private final Logger log = LogManager.getFormatterLogger(MigrationApp.class);
+    private final Logger log = LogManager.getFormatterLogger(GetBenchmark.class);
 
     private static final String DEFAULT_TOTAL_SIZE = String.valueOf(1024 * 1024 * 32);
 
@@ -51,7 +51,7 @@ public class GetBenchmark extends AbstractApplication {
 
     @Override
     public String getApplicationName() {
-        return "MigrationApp";
+        return "GetBenchmark";
     }
 
     @Override
@@ -82,7 +82,7 @@ public class GetBenchmark extends AbstractApplication {
         int chunkSize = Integer.parseInt(chunkSizeValue);
         int numChunks = totalSize / chunkSize;
         long duration = Long.parseLong(durationValue) * 1000;
-        int interval = Integer.parseInt(intervalValue);
+        int interval = Integer.parseInt(intervalValue) * 1000 * 1000;
 
         short target = targetValue.isEmpty() ? NetworkHelper.findStorageNode(bootService) : NodeID.parse(targetValue);
 
@@ -100,35 +100,37 @@ public class GetBenchmark extends AbstractApplication {
 
         try {
             FileWriter writer = new FileWriter(logDir);
-            writer.append("timestamp,operation_time_nano,chunk_id\n");
+            writer.append("timestamp,operation_time_nano\n");
             ChunkByteBuffer chunkBuffer;
             long chunkId;
             long benchmarkStartTime = System.currentTimeMillis();
-            long operationStartTime;
-            long operationDurationNano;
+
+            long opCount = 0;
+            long sampleStart = System.nanoTime();
+            long currentTime;
             while (System.currentTimeMillis() - benchmarkStartTime < duration) {
+                // Create random chunk id from range
                 chunkId = random.nextLong(range.getFrom(), range.getTo());
                 chunkBuffer = new ChunkByteBuffer(chunkId, chunkSize);
 
-                operationStartTime = System.nanoTime();
+                // Retrieve chunk and increment operation count
                 chunkService.get().get(chunkBuffer);
-                operationDurationNano = System.nanoTime() - operationStartTime;
+                opCount++;
 
-                if (!chunkBuffer.isStateOk()) {
-                    log.warn("Chunk's %X state was not OK", chunkId);
-                    continue;
+//                if (!chunkBuffer.isStateOk()) {
+//                    log.warn("Chunk's %X state was not OK", chunkId);
+//                }
+
+                if (System.nanoTime() - sampleStart >= interval) {
+                    writer.append(String.format("%d,%d\n", System.currentTimeMillis(), interval / opCount));
+                    opCount = 0;
+                    sampleStart = System.nanoTime();
                 }
-
-                writer.append(String.format("%d,%d,%X\n", System.currentTimeMillis(), operationDurationNano, chunkId));
-
-                Thread.sleep(interval);
             }
             writer.flush();
             writer.close();
         } catch (IOException e) {
             log.error("Couldn't write results to file");
-        } catch (InterruptedException p_e) {
-            log.error("Interrupted during sleep");
         }
     }
 
