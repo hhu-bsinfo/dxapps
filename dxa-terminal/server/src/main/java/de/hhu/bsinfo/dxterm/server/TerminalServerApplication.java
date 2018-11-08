@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.hhu.bsinfo.dxterm.server.cmd.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,44 +50,6 @@ import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 import de.hhu.bsinfo.dxram.tmp.TemporaryStorageService;
 import de.hhu.bsinfo.dxterm.TerminalException;
 import de.hhu.bsinfo.dxterm.TerminalSession;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppList;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdAppRun;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrieralloc;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrierfree;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarriersignon;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarriersize;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdBarrierstatus;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkMigrate;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkcreate;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkdump;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkget;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunklist;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkput;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkremove;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkremoverange;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdChunkstatus;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdCompgrpls;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdCompgrpstatus;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdComptask;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdComptaskscript;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdLoggerlevel;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdLoginfo;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdLookuptree;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdMemdump;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdMetadata;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNameget;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNamelist;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNamereg;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeinfo;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodelist;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodeshutdown;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdNodewait;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdStatsprint;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpcreate;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpget;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpput;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpremove;
-import de.hhu.bsinfo.dxterm.server.cmd.TcmdTmpstatus;
 
 /**
  * Terminal server running on a DXRAM peer as a DXRAM application. Thin clients can connect to the server and execute
@@ -300,6 +263,7 @@ public class TerminalServerApplication extends AbstractApplication implements Te
         if (isServiceAvailable(ApplicationService.class)) {
             m_terminalServer.registerTerminalCommand(new TcmdAppList());
             m_terminalServer.registerTerminalCommand(new TcmdAppRun());
+            m_terminalServer.registerTerminalCommand(new TcmdAppStats());
         }
     }
 }
