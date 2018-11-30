@@ -202,14 +202,6 @@ public class TerminalServerApplication extends AbstractApplication implements Te
             m_terminalServer.registerTerminalCommand(new TcmdChunkremoverange());
         }
 
-        // TODO
-        //  Is locking still available?
-        //        if (isServiceAvailable(AbstractLockService.class)) {
-        //            m_terminalServer.registerTerminalCommand(new TcmdChunklock());
-        //            m_terminalServer.registerTerminalCommand(new TcmdChunklocklist());
-        //            m_terminalServer.registerTerminalCommand(new TcmdChunkunlock());
-        //        }
-
         if (isServiceAvailable(LogService.class)) {
             m_terminalServer.registerTerminalCommand(new TcmdLoginfo());
         }
