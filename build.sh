@@ -1,32 +1,40 @@
 #!/bin/bash
 
-build_type="release"
+set -e
 
-if [ "$1" ]; then
-    build_type="$1"
+usage() {
+  echo "Usage: $0 app [type] [-d destination]"
+  exit 1
+}
+
+DEST=/home/$USER
+BUILD_TYPE="release"
+
+while getopts d: option
+do
+  case "${option}"
+  in
+    d) DEST=${OPTARG};;
+  esac
+done
+
+shift $((OPTIND-1))
+
+APP=$1
+
+if [ "$2" ]; then
+    BUILD_TYPE="$2"
 fi
 
-clean=""
-
-case "$build_type" in
-    debug)
-        ;;
-    release)
-        ;;
-    performance)
-        ;;
-    clean)
-        clean="1"        
-        ;;
-    *)
-        echo "Invalid build type \"$build_type\" specified"
-        exit -1
-esac
-
-echo "Build type: $build_type"
-
-if [ ! "$clean" ]; then
-    TERM=dumb ./gradlew distZip :dxa-chunkbench:jar :dxa-helloworld:jar :dxa-migration:jar :dxa-terminal:client:installDist :dxa-terminal:client:distZip :dxa-terminal:server:jar -PbuildVariant="$build_type"
-else
-    TERM=dumb ./gradlew cleanAll
+if [ -z "${DEST}" ] || [ -z "${APP}" ] || [ -z "${BUILD_TYPE}" ]; then
+    usage
 fi
+
+mkdir -p "${DEST}/dxram/dxapp"
+
+./gradlew ${APP}:jar -PbuildVariant="${BUILD_TYPE}"
+./gradlew dxa-terminal:server:jar -PbuildVariant="${BUILD_TYPE}"
+./gradlew dxa-terminal:client:installDist -PoutputDir="${DEST}/dxram"
+
+cp ./${APP}/build/libs/${APP}.jar "${DEST}/dxram/dxapp"
+cp ./dxa-terminal/server/build/libs/dxa-terminal.jar "${DEST}/dxram/dxapp"
