@@ -1,0 +1,33 @@
+language: java
+install: true
+
+stages:
+  - name: build
+    if: branch = master
+
+jobs:
+  include:
+    - stage: build
+      script: ./gradlew build -Drelease=true
+
+before_deploy: 
+  - ./gradlew dxa-chunkbench:jar -Drelease=true
+  - ./gradlew dxa-helloworld:jar -Drelease=true
+  - ./gradlew dxa-migration:jar -Drelease=true
+  - ./gradlew dxa-terminal:server:jar -Drelease=true
+  - ./gradlew dxa-terminal:client:distZip -Drelease=true
+
+deploy:
+  provider: releases
+  api_key: ${ACCESS_TOKEN}
+  skip_cleanup: true
+  file:
+    - dxa-chunkbench/build/libs/dxa-chunkbench.jar
+    - dxa-helloworld/build/libs/dxa-helloworld.jar
+    - dxa-migration/build/libs/dxa-migration.jar
+    - dxa-terminal/server/build/libs/dxa-terminal.jar
+    - dxa-terminal/client/build/distributions/dxa-terminal-client.zip
+  on:
+    repo: hhu-bsinfo/dxram
+    branch: master
+    tags: true
