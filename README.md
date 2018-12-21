@@ -12,12 +12,12 @@ determine the performance of DXRAM's key-value storage
  commands on them.
 
 # Compiling
-To compile all applications, simply run the *build.sh* script from the root of the repository:
+To compile an application, simply run the *build.sh* script from the root of the repository specifying the application's module:
 ```
-./build.sh
+./build.sh dxa-terminal:server
 ```
 
-The output jar-files are located in the sub-project directories in *build*.
+The output jar-files will be located within *~/dxram/dxapp*.
 
 # Deployment and running an application
 Please refer to the documentation in the [DXRAM](https://github.com/hhu-bsinfo/dxram) repository (doc/Applications.md)

@@ -33,3 +33,7 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+distZip {
+    archiveName "dxa-terminal-client.zip"
+}
