@@ -3,19 +3,11 @@ install: true
 
 stages:
   - name: build
-<<<<<<< HEAD
-    if: branch = master
-=======
->>>>>>> master
 
 jobs:
   include:
     - stage: build
-<<<<<<< HEAD
-      script: ./gradlew build -Drelease=true
-=======
       script: ./gradlew build
->>>>>>> master
 
 before_deploy: 
   - ./gradlew dxa-chunkbench:jar -Drelease=true
@@ -35,10 +27,6 @@ deploy:
     - dxa-terminal/server/build/libs/dxa-terminal.jar
     - dxa-terminal/client/build/distributions/dxa-terminal-client.zip
   on:
-<<<<<<< HEAD
-    repo: hhu-bsinfo/dxram
-=======
     repo: hhu-bsinfo/dxapps
->>>>>>> master
     branch: master
     tags: true
