@@ -9,11 +9,11 @@ import de.hhu.bsinfo.dxram.generated.BuildConfig;
 import de.hhu.bsinfo.dxutils.NodeID;
 
 /**
- * "Hello world" example DXRAM application
+ * "Hello world" example DXRAM application.
  *
  * @author Stefan Nothaas, stefan.nothaas@hhu.de, 17.05.17
  */
-public class HelloWorld extends AbstractApplication {
+public class HelloApplication extends AbstractApplication {
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;
@@ -21,7 +21,7 @@ public class HelloWorld extends AbstractApplication {
 
     @Override
     public String getApplicationName() {
-        return "HelloWorld";
+        return "HelloApplication";
     }
 
     @Override

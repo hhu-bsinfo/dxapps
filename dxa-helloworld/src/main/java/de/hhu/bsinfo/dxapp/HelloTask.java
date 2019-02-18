@@ -38,6 +38,9 @@ public class HelloTask implements Task {
     @Override
     public int execute(final TaskContext p_ctx) {
         System.out.println("Hello from task running on slave " + p_ctx.getCtxData().getSlaveId());
+
+        // Put your code running as a task on DXRAM peers here
+
         return 0;
     }
 
