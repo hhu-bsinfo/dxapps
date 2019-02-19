@@ -16,21 +16,25 @@
 
 package de.hhu.bsinfo.dxterm.server.cmd;
 
-import de.hhu.bsinfo.dxram.ms.*;
-import de.hhu.bsinfo.dxterm.*;
-import de.hhu.bsinfo.dxterm.server.AbstractTerminalCommand;
-import de.hhu.bsinfo.dxterm.server.TerminalServerStdin;
-import de.hhu.bsinfo.dxterm.server.TerminalServerStdout;
-import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
-
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import de.hhu.bsinfo.dxram.ms.MasterNodeEntry;
+import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
+import de.hhu.bsinfo.dxram.ms.TaskListener;
+import de.hhu.bsinfo.dxram.ms.TaskScriptState;
+import de.hhu.bsinfo.dxram.ms.script.TaskScript;
+import de.hhu.bsinfo.dxram.ms.script.TaskScriptNode;
+import de.hhu.bsinfo.dxterm.TerminalCommandString;
+import de.hhu.bsinfo.dxterm.server.AbstractTerminalCommand;
+import de.hhu.bsinfo.dxterm.server.TerminalServerStdin;
+import de.hhu.bsinfo.dxterm.server.TerminalServerStdout;
+import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
+
 /**
- * Submit a task to a compute group
+ * Submit a task to a compute group.
  *
  * @author Stefan Nothaas, stefan.nothaas@hhu.de, 03.04.2017
  */
@@ -41,8 +45,10 @@ public class TcmdComptask extends AbstractTerminalCommand {
 
     @Override
     public String getHelp() {
-        return "Submit a task to a compute group\n" + "Usage: comptask <taskName> <cgid> [minSlaves] [maxSlaves] [wait] ...\n" +
-                "  taskName: String of the fully qualified class name of the task\n" + "  cgid: Id of the compute group to submit the task to\n" +
+        return "Submit a task to a compute group\n" +
+                "Usage: comptask <taskName> <cgid> [minSlaves] [maxSlaves] [wait] ...\n" +
+                "  taskName: String of the fully qualified class name of the task\n" +
+                "  cgid: Id of the compute group to submit the task to\n" +
                 "  minSlaves: Minimum number of slaves required to start the task (default 0 = arbitrary)\n" +
                 "  maxSlaves: Maximum number of slaves for this task (default 0 = arbitrary)\n" +
                 "  wait: Wait/block until the task is completed (default true)\n" +
@@ -50,8 +56,9 @@ public class TcmdComptask extends AbstractTerminalCommand {
     }
 
     @Override
-    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout, final TerminalServerStdin p_stdin,
-                     final TerminalServiceAccessor p_services) {
+    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout,
+            final TerminalServerStdin p_stdin,
+            final TerminalServiceAccessor p_services) {
         String taskName = p_cmd.getArgument(0, null);
         short cgid = p_cmd.getArgument(1, Short::valueOf, (short) -1);
         short minSlaves = p_cmd.getArgument(2, Short::valueOf, (short) 0);
@@ -70,10 +77,12 @@ public class TcmdComptask extends AbstractTerminalCommand {
 
         MasterSlaveComputeService mscomp = p_services.getService(MasterSlaveComputeService.class);
         TaskScriptNode task;
+
         if (p_cmd.getArgc() >= 5) {
-            task = MasterSlaveComputeService.createTaskInstance(taskName, (Object[]) Arrays.copyOfRange(p_cmd.getArgs(), 5, p_cmd.getArgc()));
+            task = mscomp.createTaskInstance(taskName,
+                    (Object[]) Arrays.copyOfRange(p_cmd.getArgs(), 5, p_cmd.getArgc()));
         } else {
-            task = MasterSlaveComputeService.createTaskInstance(taskName);
+            task = mscomp.createTaskInstance(taskName);
         }
 
         if (task == null) {
@@ -147,7 +156,9 @@ public class TcmdComptask extends AbstractTerminalCommand {
 
             case 2:
                 mscomp = p_services.getService(MasterSlaveComputeService.class);
-                MasterSlaveComputeService.StatusMaster status = mscomp.getStatusMaster(p_cmdStr.getArgument(1, Short::valueOf, (short) 0));
+                MasterSlaveComputeService.StatusMaster status = mscomp.getStatusMaster(
+                        p_cmdStr.getArgument(1, Short::valueOf, (short) 0));
+
                 for (int i = 0; i <= status.getConnectedSlaves().size(); i++) {
                     list.add(Integer.toString(i));
                 }
@@ -158,6 +169,7 @@ public class TcmdComptask extends AbstractTerminalCommand {
                 mscomp = p_services.getService(MasterSlaveComputeService.class);
                 status = mscomp.getStatusMaster(p_cmdStr.getArgument(1, Short::valueOf, (short) 0));
                 int min = p_cmdStr.getArgument(2, Integer::valueOf, 0);
+
                 for (int i = 0; i <= status.getConnectedSlaves().size(); i++) {
                     if (i >= min) {
                         list.add(Integer.toString(i));

@@ -16,20 +16,23 @@
 
 package de.hhu.bsinfo.dxterm.server.cmd;
 
-import de.hhu.bsinfo.dxram.ms.*;
-import de.hhu.bsinfo.dxterm.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
+import de.hhu.bsinfo.dxram.ms.MasterNodeEntry;
+import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
+import de.hhu.bsinfo.dxram.ms.TaskListener;
+import de.hhu.bsinfo.dxram.ms.TaskScriptState;
+import de.hhu.bsinfo.dxram.ms.script.TaskScript;
+import de.hhu.bsinfo.dxterm.TerminalCommandString;
 import de.hhu.bsinfo.dxterm.server.AbstractTerminalCommand;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdin;
 import de.hhu.bsinfo.dxterm.server.TerminalServerStdout;
 import de.hhu.bsinfo.dxterm.server.TerminalServiceAccessor;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-
 /**
- * Submit a list of tasks loaded from a file
+ * Submit a list of tasks loaded from a file.
  *
  * @author Stefan Nothaas, stefan.nothaas@hhu.de, 03.04.2017
  */
@@ -40,13 +43,16 @@ public class TcmdComptaskscript extends AbstractTerminalCommand {
 
     @Override
     public String getHelp() {
-        return "Submit a list of tasks loaded from a file\n" + "Usage: comptaskscript <fileName> <cgid> [wait]\n" + "  fileName: Path to a task script file\n" +
-                "  cgid: Id of the compute group to submit the task script to\n" + "  wait: Wait/block until script completed (default: true)";
+        return "Submit a list of tasks loaded from a file\n" + "Usage: comptaskscript <fileName> <cgid> [wait]\n" +
+                "  fileName: Path to a task script file\n" +
+                "  cgid: Id of the compute group to submit the task script to\n" +
+                "  wait: Wait/block until script completed (default: true)";
     }
 
     @Override
-    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout, final TerminalServerStdin p_stdin,
-                     final TerminalServiceAccessor p_services) {
+    public void exec(final TerminalCommandString p_cmd, final TerminalServerStdout p_stdout,
+            final TerminalServerStdin p_stdin,
+            final TerminalServiceAccessor p_services) {
         String fileName = p_cmd.getArgument(0, null);
         short cgid = p_cmd.getArgument(1, Short::valueOf, (short) -1);
         boolean wait = p_cmd.getArgument(2, Boolean::valueOf, true);
@@ -62,7 +68,7 @@ public class TcmdComptaskscript extends AbstractTerminalCommand {
         }
 
         MasterSlaveComputeService mscomp = p_services.getService(MasterSlaveComputeService.class);
-        TaskScript taskScript = MasterSlaveComputeService.readTaskScriptFromJsonFile(fileName);
+        TaskScript taskScript = mscomp.readTaskScriptFromJsonFile(fileName);
 
         if (taskScript == null) {
             p_stdout.printflnErr("Reading task script from file '%s' failed", fileName);
