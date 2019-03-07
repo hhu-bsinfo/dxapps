@@ -28,9 +28,10 @@ public class HelloApplication extends AbstractApplication {
     public void main(final String[] p_args) {
         BootService bootService = getService(BootService.class);
 
-        System.out.println("Hello, I am application " + getApplicationName() + " on a peer and my node id is " +
-                NodeID.toHexString(bootService.getNodeID()) + " with " + p_args.length + " cmd args: " +
-                Arrays.toString(p_args));
+        System.out.printf("\n");
+        System.out.printf("  Hello! I am %s running on node %s.\n", getApplicationName(), NodeID.toHexStringShort(bootService.getNodeID()));
+        System.out.printf("  My arguments are: %s", Arrays.toString(p_args));
+        System.out.printf("\n");
 
         // Put your application code running on the DXRAM node/peer here
     }
