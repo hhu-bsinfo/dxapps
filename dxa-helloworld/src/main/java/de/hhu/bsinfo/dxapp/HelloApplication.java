@@ -30,7 +30,7 @@ public class HelloApplication extends AbstractApplication {
 
         System.out.printf("\n");
         System.out.printf("  Hello! I am %s running on node %s.\n", getApplicationName(), NodeID.toHexStringShort(bootService.getNodeID()));
-        System.out.printf("  My arguments are: %s", Arrays.toString(p_args));
+        System.out.printf("  My arguments are: %s\n", Arrays.toString(p_args));
         System.out.printf("\n");
 
         // Put your application code running on the DXRAM node/peer here
