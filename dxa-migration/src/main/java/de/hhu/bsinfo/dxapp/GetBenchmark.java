@@ -1,7 +1,7 @@
 package de.hhu.bsinfo.dxapp;
 
 import de.hhu.bsinfo.dxmem.data.ChunkByteBuffer;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GetBenchmark extends AbstractApplication {
+public class GetBenchmark extends Application {
 
     private final Logger log = LogManager.getFormatterLogger(GetBenchmark.class);
 

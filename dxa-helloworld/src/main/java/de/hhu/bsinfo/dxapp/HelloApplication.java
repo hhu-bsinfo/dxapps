@@ -2,7 +2,7 @@ package de.hhu.bsinfo.dxapp;
 
 import java.util.Arrays;
 
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
@@ -13,7 +13,7 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Stefan Nothaas, stefan.nothaas@hhu.de, 17.05.17
  */
-public class HelloApplication extends AbstractApplication {
+public class HelloApplication extends Application {
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;

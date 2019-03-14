@@ -15,7 +15,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkLocalService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
@@ -27,7 +27,7 @@ import de.hhu.bsinfo.dxram.migration.MigrationTicket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MigrationApp extends AbstractApplication {
+public class MigrationApp extends Application {
 
     private final Logger log = LogManager.getFormatterLogger(MigrationApp.class);
 

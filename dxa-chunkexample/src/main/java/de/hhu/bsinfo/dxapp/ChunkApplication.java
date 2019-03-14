@@ -1,7 +1,7 @@
 package de.hhu.bsinfo.dxapp;
 
 import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
@@ -17,7 +17,7 @@ import de.hhu.bsinfo.dxutils.NodeID;
  *
  * @author Fabian Ruhland, fabian.ruhland@hhu.de, 12.03.2019
  */
-public class ChunkApplication extends AbstractApplication {
+public class ChunkApplication extends Application {
 
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {

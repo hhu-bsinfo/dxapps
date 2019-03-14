@@ -2,7 +2,7 @@ package de.hhu.bsinfo.dxapp;
 
 import picocli.CommandLine;
 
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.app.ApplicationService;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkDebugService;
@@ -14,7 +14,7 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxram.stats.StatisticsService;
 import de.hhu.bsinfo.dxram.sync.SynchronizationService;
 
-public class ChunkBenchmark extends AbstractApplication {
+public class ChunkBenchmark extends Application {
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;

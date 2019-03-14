@@ -1,4 +1,4 @@
-include 'dxa-chunkbench', 'dxa-helloworld', 'dxa-migration',
+include 'dxa-chunkbench', 'dxa-helloworld', 'dxa-migration', 'dxa-chunkexample',
         'dxa-terminal:client', 'dxa-terminal:common', 'dxa-terminal:server'
 
 boolean isDevelop = true
