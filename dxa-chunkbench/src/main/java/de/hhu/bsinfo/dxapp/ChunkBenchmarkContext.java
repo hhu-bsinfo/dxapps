@@ -25,10 +25,12 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
     private final StatisticsService m_statistics;
     private final SynchronizationService m_sync;
 
+    private boolean m_useMultiOps = true;
+
     public ChunkBenchmarkContext(final String[] p_appArgs, final ApplicationService p_application,
-            final BootService p_boot, final ChunkService p_default, final ChunkLocalService p_local,
-            final ChunkDebugService p_debug, final NameserviceService p_name, final StatisticsService p_statistics,
-            final SynchronizationService p_sync) {
+                                 final BootService p_boot, final ChunkService p_default, final ChunkLocalService p_local,
+                                 final ChunkDebugService p_debug, final NameserviceService p_name, final StatisticsService p_statistics,
+                                 final SynchronizationService p_sync) {
         m_appArgs = p_appArgs;
         m_app = p_application;
         m_boot = p_boot;
@@ -68,6 +70,10 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
         return m_sync;
     }
 
+    public void setUseMultiOps(boolean useMultiOps) {
+        this.m_useMultiOps = useMultiOps;
+    }
+
     @Override
     public HeapStatus getHeapStatus() {
         return m_default.status().getStatus().getHeapStatus();
@@ -95,16 +101,34 @@ public class ChunkBenchmarkContext implements BenchmarkContext {
 
     @Override
     public void get(AbstractChunk[] p_chunks) {
-        m_default.get().get(p_chunks);
+        if(m_useMultiOps) {
+            m_default.get().get(p_chunks);
+        } else {
+            for(AbstractChunk chunk : p_chunks) {
+                m_default.get().get(chunk);
+            }
+        }
     }
 
     @Override
     public void put(AbstractChunk[] p_chunks) {
-        m_default.put().put(p_chunks);
+        if(m_useMultiOps) {
+            m_default.put().put(p_chunks);
+        } else {
+            for(AbstractChunk chunk : p_chunks) {
+                m_default.put().put(chunk);
+            }
+        }
     }
 
     @Override
     public void remove(AbstractChunk[] p_chunks) {
-        m_default.remove().remove(p_chunks);
+        if(m_useMultiOps) {
+            m_default.remove().remove(p_chunks);
+        } else {
+            for(AbstractChunk chunk : p_chunks) {
+                m_default.remove().remove(chunk);
+            }
+        }
     }
 }

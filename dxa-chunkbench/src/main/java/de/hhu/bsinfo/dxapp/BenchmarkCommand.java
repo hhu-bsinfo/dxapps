@@ -29,7 +29,7 @@ import de.hhu.bsinfo.dxutils.NodeID;
 
 @CommandLine.Command(
         name = "ChunkBenchmark",
-        customSynopsis = "@|bold ChunkBenchmark|@ @|yellow <isFirst> <isNodeList> <activeNodesPerPhase> " +
+        customSynopsis = "@|bold ChunkBenchmark|@ @|yellow <isFirst> <useMultiOps> <isNodeList> <activeNodesPerPhase> " +
                 "WORKLOAD|@ [...]",
         description = "Run a benchmark to evaluate the ChunkService with different workloads",
         subcommands = {
@@ -58,13 +58,19 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     @CommandLine.Parameters(
             index = "1",
+            paramLabel = "<useMultiOps>",
+            description = "Set this to true, if you want the benchmark to use MULTI-GET/MULTI-PUT operations.")
+    private boolean m_useMultiOps;
+
+    @CommandLine.Parameters(
+            index = "2",
             paramLabel = "<isNodeList>",
             description = "Set this to true if you are using the node list in the next argument. False if using " +
                     "node counts.")
     private boolean m_isNodeList;
 
     @CommandLine.Parameters(
-            index = "2",
+            index = "3",
             paramLabel = "<activeNodesPerPhase>",
             description = "A list of node counts determining the number of nodes to run on each phase, e.g. 2:3 " +
                     "means run with 2 nodes on first phase and three nodes on second phase. Or, a list of phases with" +
@@ -106,6 +112,8 @@ public class BenchmarkCommand implements Runnable, BenchmarkRunner {
 
     private boolean argumentBootstrap(final Benchmark p_benchmark) {
         BootstrappingNodesUtil bootstrap = new BootstrappingNodesUtil(m_context.getBootService());
+
+        m_context.setUseMultiOps(m_useMultiOps);
 
         if (m_isNodeList) {
             m_activeNodesPerPhase = bootstrap.bootstrapNodesListParameters(m_activeNodesPerPhaseStr);
