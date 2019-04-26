@@ -1,5 +1,6 @@
 package de.hhu.bsinfo.dxapp;
 
+import de.hhu.bsinfo.dxmem.benchmark.workload.*;
 import picocli.CommandLine;
 
 import java.util.Arrays;
@@ -11,16 +12,6 @@ import org.apache.logging.log4j.Logger;
 import de.hhu.bsinfo.dxmem.benchmark.Benchmark;
 import de.hhu.bsinfo.dxmem.benchmark.BenchmarkPhase;
 import de.hhu.bsinfo.dxmem.benchmark.BenchmarkRunner;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookA;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookB;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookC;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookD;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookE;
-import de.hhu.bsinfo.dxmem.benchmark.workload.FacebookF;
-import de.hhu.bsinfo.dxmem.benchmark.workload.MemVar;
-import de.hhu.bsinfo.dxmem.benchmark.workload.YcsbA;
-import de.hhu.bsinfo.dxmem.benchmark.workload.YcsbB;
-import de.hhu.bsinfo.dxmem.benchmark.workload.YcsbC;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 import de.hhu.bsinfo.dxmem.data.ChunkIDRanges;
 import de.hhu.bsinfo.dxram.lookup.overlay.storage.BarrierID;
@@ -43,6 +34,7 @@ import de.hhu.bsinfo.dxutils.NodeID;
                 YcsbA.class,
                 YcsbB.class,
                 YcsbC.class,
+                YcsbCustom.class
         }
 )
 public class BenchmarkCommand implements Runnable, BenchmarkRunner {
