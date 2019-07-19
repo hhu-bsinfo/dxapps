@@ -14,7 +14,7 @@ The applications in this repository are part of the [DXRAM](https://github.com/h
 # Compiling
 To compile an application, simply run the *build.sh* script from the root of the repository specifying the application's module:
 ```
-./build.sh dxa-terminal:server
+./gradlew dxa-helloworld:build
 ```
 
 The output jar-files will be located within *~/dxram/dxapp*.
