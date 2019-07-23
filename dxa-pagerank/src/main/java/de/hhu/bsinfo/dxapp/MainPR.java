@@ -25,6 +25,10 @@ import de.hhu.bsinfo.dxutils.Stopwatch;
  * @author Constantin Eiteneuer, constantin.eiteneuer@hhu.de
  */
 public class MainPR extends Application {
+    ChunkService              chunkService;
+    MasterSlaveComputeService computeService;
+    JobService                jobService;
+
     private Stopwatch stopwatch = new Stopwatch();
     private boolean isSynthetic = false;
 
@@ -108,9 +112,9 @@ public class MainPR extends Application {
         int MAX_ROUNDS = Integer.parseInt(p_args[3]);
         boolean printPR = Boolean.parseBoolean(p_args[4]);
 
-        ChunkService chunkService = getService(ChunkService.class);
-        MasterSlaveComputeService computeService = getService(MasterSlaveComputeService.class);
-        JobService jobService = getService(JobService.class);
+        chunkService = getService(ChunkService.class);
+        computeService = getService(MasterSlaveComputeService.class);
+        jobService = getService(JobService.class);
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
 
         if(p_args.length == 6) {
