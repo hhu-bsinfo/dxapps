@@ -59,6 +59,11 @@ public class Vertex extends AbstractChunk {
     }
 
     public void setPageRank(int p_round){
+        if (m_pageRank.length==0) {
+            System.out.println("setPageRank: m_pageRank.length=0");
+            return;
+        }
+
         m_pageRank[p_round] = m_pageRank[Math.abs(p_round - 1)];
     }
 
