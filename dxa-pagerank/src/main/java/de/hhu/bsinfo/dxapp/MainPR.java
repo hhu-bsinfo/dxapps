@@ -25,6 +25,24 @@ import de.hhu.bsinfo.dxutils.Stopwatch;
  * @author Constantin Eiteneuer, constantin.eiteneuer@hhu.de
  */
 public class MainPR extends Application {
+    private Stopwatch stopwatch = new Stopwatch();
+    private boolean isSynthetic = false;
+
+    // program arguments
+    private int     N;              // p_args[0]
+    private double  DAMPING_FACTOR; // p_args[1]
+    private double  THRESHOLD;      // p_args[2]
+    private int     MAX_ROUNDS;     // p_args[3]
+    private boolean printPR;        // p_args[4]
+
+
+    private String  filename = "SYNTHETIC"; // p_args[5]
+
+    private double  locality = 0.0; // p_args[5]
+    private int     meanInDeg = 0;  // p_args[6]
+    private int     randomSeed;     // p_args[7]
+
+
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;
@@ -33,6 +51,47 @@ public class MainPR extends Application {
     @Override
     public String getApplicationName() {
         return "dxa-PageRank";
+    }
+
+    // load graph from file
+    private loadGraph(String fn) {
+        System.out.println("loadGraph");
+        filename = fn;
+        ReadLumpInEdgeListTask readLumpInEdgeListTask = new ReadLumpInEdgeListTask(filename, N);
+        TaskScript inputTaskScript = new TaskScript(readLumpInEdgeListTask);
+        TaskScriptState inputState = computeService.submitTaskScript(inputTaskScript, (short) 0);
+
+        stopwatch.start();
+        while (!inputState.hasTaskCompleted()) {
+            try {
+                Thread.sleep(100);
+            } catch (final InterruptedException ignore) {
+            }
+        }
+        stopwatch.stop();
+    }
+
+    // generate graph
+    private generateGraph(String p_locality, String p_meanInDeg, String p_randomSeed) {
+        System.out.println("generateGraph");
+        isSynthetic = true;
+        CreateSyntheticGraphSeed createSyntheticGraph;
+        locality = Double.parseDouble(p_locality);
+        meanInDeg = Integer.parseInt(p_meanInDeg);
+        randomSeed = Integer.parseInt(p_randomSeed);
+        createSyntheticGraph = new CreateSyntheticGraphSeed(N, locality, meanInDeg, randomSeed);
+        TaskScript inputTaskScript = new TaskScript(createSyntheticGraph);
+        TaskScriptState inputState = computeService.submitTaskScript(inputTaskScript, (short) 0);
+
+        stopwatch.start();
+        while (!inputState.hasTaskCompleted()) {
+            try {
+                Thread.sleep(100);
+            } catch (final InterruptedException ignore) {
+
+            }
+        }
+        stopwatch.stop();
     }
 
     @Override
@@ -48,73 +107,30 @@ public class MainPR extends Application {
         double THRESHOLD = Double.parseDouble(p_args[2]);
         int MAX_ROUNDS = Integer.parseInt(p_args[3]);
         boolean printPR = Boolean.parseBoolean(p_args[4]);
-        boolean isSynthetic = false;
 
         ChunkService chunkService = getService(ChunkService.class);
         MasterSlaveComputeService computeService = getService(MasterSlaveComputeService.class);
         JobService jobService = getService(JobService.class);
-
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
 
-        Stopwatch stopwatch = new Stopwatch();
-
-        String filename = "SYNTHETIC";
-        double locality = 0.0;
-        int meanInDeg = 0;
-
-        /**Graph Input (Either File or Synthetic)**/
-
         if(p_args.length == 6) {
-            filename = p_args[5];
-            ReadLumpInEdgeListTask readLumpInEdgeListTask = new ReadLumpInEdgeListTask(filename, N);
-            TaskScript inputTaskScript = new TaskScript(readLumpInEdgeListTask);
-            TaskScriptState inputState = computeService.submitTaskScript(inputTaskScript, (short) 0);
-            stopwatch.start();
-
-            while (!inputState.hasTaskCompleted()) {
-                try {
-                    Thread.sleep(100);
-                } catch (final InterruptedException ignore) {
-
-                }
-            }
-            stopwatch.stop();
+            loadGraph( p_args[5] );
         } else {
-            isSynthetic = true;
-            CreateSyntheticGraphSeed createSyntheticGraph;
-            locality = Double.parseDouble(p_args[5]);
-            meanInDeg = Integer.parseInt(p_args[6]);
-            int randomSeed = Integer.parseInt(p_args[7]);
-            createSyntheticGraph = new CreateSyntheticGraphSeed(N, locality, meanInDeg, randomSeed);
-            TaskScript inputTaskScript = new TaskScript(createSyntheticGraph);
-            stopwatch.start();
-            TaskScriptState inputState = computeService.submitTaskScript(inputTaskScript, (short) 0);
-            stopwatch.start();
-
-            while (!inputState.hasTaskCompleted()) {
-                try {
-                    Thread.sleep(100);
-                } catch (final InterruptedException ignore) {
-
-                }
-            }
-
-            stopwatch.stop();
+            generateGraph( p_args[5], p_args[6], p_args[7] );
         }
+        System.out.println("GRAPH INPUT DONE...");
 
         long inputTime = stopwatch.getTime();
         long memUsage = 0;
         long edgeCnt = 0;
-        System.out.println("GRAPH INPUT DONE...");
         MetaChunk[] metaChunks = new MetaChunk[connectedSlaves.size()];
-
         for (int i = 0; i < connectedSlaves.size(); i++) {
             metaChunks[i] = new MetaChunk(ChunkID.getChunkID(connectedSlaves.get(i),localVertexCnt(N,i,connectedSlaves.size()) + 1));
             chunkService.get().get(metaChunks[i]);
             memUsage += chunkService.status().getStatus(connectedSlaves.get(i)).getHeapStatus().getUsedSize().getBytes();
             edgeCnt += metaChunks[i].getEdgeCnt();
         }
-
+        System.out.println("Metadata Chunks created");
         System.out.println("VERTICES: " + N);
         System.out.println("EDGES: " + edgeCnt);
         System.out.println("Memory: " + memUsage + "B");
@@ -215,9 +231,9 @@ public class MainPR extends Application {
             }
         }
 
+        System.out.println("print Statistics");
         double[] roundPRerrArr = roundPRerr.stream().mapToDouble(i -> i).toArray();
         long[] iterationTimesArr = iterationTimes.stream().mapToLong(i -> i).toArray();
-
         double memUseMB = (double) memUsage / Math.pow(1024,2);
         PrStatisticsJob prStatisticsJob = new PrStatisticsJob(outDir,filename,N,edgeCnt,DAMPING_FACTOR,THRESHOLD,inputTime,iterationTimesArr,memUseMB,roundPRerrArr,locality,meanInDeg);
         jobService.pushJobRemote(prStatisticsJob, computeService.getStatusMaster((short) 0).getConnectedSlaves().get(0));
