@@ -63,7 +63,10 @@ public class Vertex extends AbstractChunk {
     }
 
     public void calcLumpPageRank(int N, double D, double p_sum, double p_danglingPR ,int p_round){
-        System.out.println("calcLumpPageRank, m_pageRank.length="+m_pageRank.length);
+        if (m_pageRank.length==0) {
+            System.out.println("calcLumpPageRank: m_pageRank.length=0"h);
+            return;
+        }
         m_pageRank[p_round] = (1 - D)/(double) N + D * p_sum + D * p_danglingPR / (double) N;
     }
 
@@ -91,7 +94,7 @@ public class Vertex extends AbstractChunk {
     }
 
     @Override
-    public void importObject2(Importer p_importer) {
+    public void importObject(Importer p_importer) {
         m_pageRank = p_importer.readDoubleArray(m_pageRank);
         m_outDeg = p_importer.readInt(m_outDeg);
         m_name = p_importer.readInt(m_name);
