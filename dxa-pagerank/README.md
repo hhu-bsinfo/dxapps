@@ -1,6 +1,6 @@
 # DXRAM dxa-pageRank
 This DXRAM application provides a pageRank implementaion for the in-memory key-value Store 
-[DXRAM](https://github.com/hhu-bsinfo/dxram/).
+[DXRAM](https://github.com/hhu-bsinfo/dxram/). It has been implemented by Constantin Eiteneuer, 2019.
 
 # Installation
 ## DXRAM / DXApps / DXTerm

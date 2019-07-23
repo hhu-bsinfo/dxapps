@@ -1,3 +1,4 @@
+/* update to DXRAM 0.80, 23.7.19 */
 package de.hhu.bsinfo.dxapp.jobs;
 
 import java.io.BufferedWriter;
@@ -7,13 +8,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import de.hhu.bsinfo.dxram.job.AbstractJob;
+import de.hhu.bsinfo.dxram.job.Job;
 import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
 import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxutils.serialization.ObjectSizeUtil;
 
-public class PrStatisticsJob extends AbstractJob {
+public class PrStatisticsJob extends Job {
 
     private String m_outDir;
     private String m_graphInput;

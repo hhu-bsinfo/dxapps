@@ -27,7 +27,7 @@ compileJava {
 }
 
 dependencies {
-    providedImplementation 'de.hhu.bsinfo:dxram:0.7.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
+    providedImplementation 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
     testImplementation 'junit:junit:4.12'
 }
 
@@ -35,6 +35,9 @@ jar {
     archiveName 'dxa-pageRank.jar'
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes 'Application-Class': 'de.hhu.bsinfo.dxapp.MainPR'
     }
 }
 

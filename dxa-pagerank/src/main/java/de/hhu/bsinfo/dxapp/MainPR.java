@@ -1,3 +1,4 @@
+/* update to DXRAM 0.80, 23.7.19 */
 package de.hhu.bsinfo.dxapp;
 
 import java.io.File;
@@ -7,7 +8,7 @@ import java.util.Date;
 
 import de.hhu.bsinfo.dxapp.chunk.MetaChunk;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxram.app.AbstractApplication;
+import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
@@ -23,7 +24,7 @@ import de.hhu.bsinfo.dxutils.Stopwatch;
  *
  * @author Constantin Eiteneuer, constantin.eiteneuer@hhu.de
  */
-public class MainPR extends AbstractApplication {
+public class MainPR extends Application {
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;
