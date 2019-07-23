@@ -91,8 +91,8 @@ public class Vertex extends AbstractChunk {
     }
 
     @Override
-    public void importObject(Importer p_importer) {
-       // m_pageRank = p_importer.readDoubleArray(m_pageRank);
+    public void importObject2(Importer p_importer) {
+        m_pageRank = p_importer.readDoubleArray(m_pageRank);
         m_outDeg = p_importer.readInt(m_outDeg);
         m_name = p_importer.readInt(m_name);
         m_inEdges = p_importer.readLongArray(m_inEdges);
