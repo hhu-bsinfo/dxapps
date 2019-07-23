@@ -154,10 +154,11 @@ public class MainPR extends Application {
         TaskScriptState state;
 
         /**PageRank Iterations**/
-
+        System.out.println("Run page rank iterations");
         for (int i = 0; i < MAX_ROUNDS; i++) {
             danglingPR = 1;
             PRerr = 0;
+            System.out.println("   iteration = " + i);
             stopwatch.start();
 
             if(i % 2 == 0){
