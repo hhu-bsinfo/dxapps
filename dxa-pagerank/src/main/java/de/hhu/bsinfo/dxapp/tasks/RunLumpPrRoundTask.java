@@ -93,6 +93,7 @@ public class RunLumpPrRoundTask implements Task {
     }
 
     public void pageRankIter(Vertex p_vertex, double p_danglingPR, ChunkService p_chunkService){
+        System.out.println("pageRankIter start");
         long incidenceList[] = p_vertex.getM_inEdges();
         Vertex[] neighbors = new Vertex[incidenceList.length];
         double tmpPR = 0.0;
@@ -117,6 +118,7 @@ public class RunLumpPrRoundTask implements Task {
         }
 
         p_chunkService.put().put(p_vertex);
+        System.out.println("pageRankIter end");
 
     }
 
