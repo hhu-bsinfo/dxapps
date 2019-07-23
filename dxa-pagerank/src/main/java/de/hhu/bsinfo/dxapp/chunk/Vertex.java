@@ -14,7 +14,7 @@ import java.util.Arrays;
 public class Vertex extends AbstractChunk {
 
     private long[] m_inEdges = new long[0];
-    private final double[] m_pageRank = new double[2];
+    private double[] m_pageRank = new double[2];
     private int m_outDeg = 0;
     private int m_name;
 
