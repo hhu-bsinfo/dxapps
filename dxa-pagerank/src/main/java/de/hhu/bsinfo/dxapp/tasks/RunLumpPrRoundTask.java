@@ -53,7 +53,7 @@ public class RunLumpPrRoundTask implements Task {
 
         short mySlaveNodeID = taskContext.getCtxData().getOwnNodeId();
 
-
+        System.out.println("RunLumpPrRoundTask - ececute");
         Iterator<Long> localchunks = chunkService.cidStatus().getAllLocalChunkIDRanges(bootService.getNodeID()).iterator();
         localchunks.next();
         Vertex[] localVertices = new Vertex[(int)chunkService.status().getStatus(bootService.getNodeID()).getLIDStoreStatus().getCurrentLIDCounter() - 1];
@@ -61,13 +61,13 @@ public class RunLumpPrRoundTask implements Task {
         for (int i = 0; i < localVertices.length; i++) {
             localVertices[i] = new Vertex(localchunks.next());
         }
-
+        System.out.println("   *");
         chunkService.get().get(localVertices);
 
         MetaChunk metaChunk = new MetaChunk(ChunkID.getChunkID(mySlaveNodeID,localVertices.length + 1));
         chunkService.get().get(metaChunk);
         double danglingPR = metaChunk.getPRsum();
-
+        System.out.println("   **");
         if(!m_calcDanglingPR){
             Stream.of(localVertices).parallel().forEach(localVertex -> {
                 if(localVertex.getOutDeg() != 0){
@@ -81,6 +81,7 @@ public class RunLumpPrRoundTask implements Task {
                 }
             });
         }
+        System.out.println("   ***");
         metaChunk.setPRsum(m_PRSum.sum());
         metaChunk.setPRerr(m_PRErr.sum());
         chunkService.put().put(metaChunk);

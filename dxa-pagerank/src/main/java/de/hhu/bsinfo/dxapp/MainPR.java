@@ -184,7 +184,7 @@ public class MainPR extends Application {
         }
 
         /**Restore dangling PageRanks**/
-
+        System.out.println("Restore dangling PageRanks");
         RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N,DAMPING_FACTOR,NumRounds % 2,true);
         TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
         state = computeService.submitTaskScript(taskScriptCalcDanglingPR,(short) 0);
@@ -198,6 +198,7 @@ public class MainPR extends Application {
         }
 
         /**print OutputFiles**/
+        System.out.println("print OutputFiles");
 
         String outDir = createOutputDirs();
 
