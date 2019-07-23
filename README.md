@@ -1,5 +1,4 @@
 # DXApps: A collection of various examples, development and benchmarking DXRAM applications
-Test
 [![Build Status](https://travis-ci.org/hhu-bsinfo/dxapps.svg?branch=master)](https://travis-ci.org/hhu-bsinfo/dxapps)
 [![Build Status](https://travis-ci.org/hhu-bsinfo/dxapps.svg?branch=development)](https://travis-ci.org/hhu-bsinfo/dxapps)
 
