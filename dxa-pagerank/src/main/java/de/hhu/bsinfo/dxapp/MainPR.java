@@ -204,50 +204,48 @@ public class MainPR extends Application {
                     break;
                 }
 
-            }
 
+                /**Restore dangling PageRanks**/
+                System.out.println("Restore dangling PageRanks");
+                RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N, DAMPING_FACTOR, NumRounds % 2, true);
+                TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
+                state = computeService.submitTaskScript(taskScriptCalcDanglingPR, (short) 0);
 
-            /**Restore dangling PageRanks**/
-            System.out.println("Restore dangling PageRanks");
-            RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N, DAMPING_FACTOR, NumRounds % 2, true);
-            TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
-            state = computeService.submitTaskScript(taskScriptCalcDanglingPR, (short) 0);
+                while (!state.hasTaskCompleted()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (final InterruptedException ignore) {
 
-            while (!state.hasTaskCompleted()) {
-                try {
-                    Thread.sleep(100);
-                } catch (final InterruptedException ignore) {
-
+                    }
                 }
             }
-        }
 
-        /**print OutputFiles**/
-       System.out.println("print OutputFiles");
+            /**print OutputFiles**/
+            System.out.println("print OutputFiles");
 
-        String outDir = createOutputDirs();
+            String outDir = createOutputDirs();
 
-        if(printPR){
-            PRInfoTask PRInfo = new PRInfoTask(outDir,NumRounds % 2, isSynthetic);
-            TaskScript PRInfoTaskScript = new TaskScript(PRInfo);
-            TaskScriptState PRInfoTaskScriptState = computeService.submitTaskScript(PRInfoTaskScript, (short) 0);
-            while (!PRInfoTaskScriptState.hasTaskCompleted() && computeService.getStatusMaster((short) 0).getNumTasksQueued() != 0) {
-                try {
-                    Thread.sleep(100);
-                } catch (final InterruptedException ignore) {
+            if (printPR) {
+                PRInfoTask PRInfo = new PRInfoTask(outDir, NumRounds % 2, isSynthetic);
+                TaskScript PRInfoTaskScript = new TaskScript(PRInfo);
+                TaskScriptState PRInfoTaskScriptState = computeService.submitTaskScript(PRInfoTaskScript, (short) 0);
+                while (!PRInfoTaskScriptState.hasTaskCompleted() && computeService.getStatusMaster((short) 0).getNumTasksQueued() != 0) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (final InterruptedException ignore) {
 
+                    }
                 }
             }
+
+            System.out.println("print Statistics");
+            double[] roundPRerrArr = roundPRerr.stream().mapToDouble(i -> i).toArray();
+            long[] iterationTimesArr = iterationTimes.stream().mapToLong(i -> i).toArray();
+            double memUseMB = (double) memUsage / Math.pow(1024, 2);
+            PrStatisticsJob prStatisticsJob = new PrStatisticsJob(outDir, filename, N, edgeCnt, DAMPING_FACTOR, THRESHOLD, inputTime, iterationTimesArr, memUseMB, roundPRerrArr, locality, meanInDeg);
+            jobService.pushJobRemote(prStatisticsJob, computeService.getStatusMaster((short) 0).getConnectedSlaves().get(0));
+            jobService.waitForAllJobsToFinish();
         }
-
-        System.out.println("print Statistics");
-        double[] roundPRerrArr = roundPRerr.stream().mapToDouble(i -> i).toArray();
-        long[] iterationTimesArr = iterationTimes.stream().mapToLong(i -> i).toArray();
-        double memUseMB = (double) memUsage / Math.pow(1024,2);
-        PrStatisticsJob prStatisticsJob = new PrStatisticsJob(outDir,filename,N,edgeCnt,DAMPING_FACTOR,THRESHOLD,inputTime,iterationTimesArr,memUseMB,roundPRerrArr,locality,meanInDeg);
-        jobService.pushJobRemote(prStatisticsJob, computeService.getStatusMaster((short) 0).getConnectedSlaves().get(0));
-        jobService.waitForAllJobsToFinish();
-
         System.out.println("*** END ***");
     }
 
