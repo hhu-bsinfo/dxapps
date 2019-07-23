@@ -54,7 +54,7 @@ public class MainPR extends Application {
     }
 
     // load graph from file
-    private loadGraph(String fn) {
+    private void loadGraph(String fn) {
         System.out.println("loadGraph");
         filename = fn;
         ReadLumpInEdgeListTask readLumpInEdgeListTask = new ReadLumpInEdgeListTask(filename, N);
@@ -72,7 +72,7 @@ public class MainPR extends Application {
     }
 
     // generate graph
-    private generateGraph(String p_locality, String p_meanInDeg, String p_randomSeed) {
+    private void generateGraph(String p_locality, String p_meanInDeg, String p_randomSeed) {
         System.out.println("generateGraph");
         isSynthetic = true;
         CreateSyntheticGraphSeed createSyntheticGraph;
