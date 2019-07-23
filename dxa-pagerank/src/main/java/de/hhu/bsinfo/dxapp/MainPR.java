@@ -207,22 +207,22 @@ public class MainPR extends Application {
 
             }
 
-        }
 
-        /**Restore dangling PageRanks**/
-    /*    System.out.println("Restore dangling PageRanks");
-        RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N,DAMPING_FACTOR,NumRounds % 2,true);
-        TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
-        state = computeService.submitTaskScript(taskScriptCalcDanglingPR,(short) 0);
+            /**Restore dangling PageRanks**/
+            System.out.println("Restore dangling PageRanks");
+            RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N, DAMPING_FACTOR, NumRounds % 2, true);
+            TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
+            state = computeService.submitTaskScript(taskScriptCalcDanglingPR, (short) 0);
 
-        while (!state.hasTaskCompleted()) {
-            try {
-                Thread.sleep(100);
-            } catch (final InterruptedException ignore) {
+            while (!state.hasTaskCompleted()) {
+                try {
+                    Thread.sleep(100);
+                } catch (final InterruptedException ignore) {
 
+                }
             }
         }
-*/
+        
         /**print OutputFiles**/
   /*      System.out.println("print OutputFiles");
 
