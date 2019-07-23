@@ -154,6 +154,9 @@ public class MainPR extends Application {
         ArrayList<Long> iterationTimes = new ArrayList<>();
         TaskScriptState state;
 
+        if (computeService.getComputeRole() ==  ComputeRole.MASTER)
+            System.out.println("***MASTER***");
+
         /**PageRank Iterations**/
         System.out.println("Run page rank iterations");
         for (int i = 0; i < MAX_ROUNDS; i++) {
