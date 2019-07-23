@@ -153,7 +153,7 @@ public class MainPR extends Application {
         ArrayList<Long> iterationTimes = new ArrayList<>();
         TaskScriptState state;
 
-       // if (computeService.getComputeRole() ==  ComputeRole.MASTER) {
+        if (computeService.getComputeRole() ==  ComputeRole.MASTER) {
 
             /**PageRank Iterations**/
             System.out.println("Run page rank iterations");
@@ -220,7 +220,7 @@ public class MainPR extends Application {
 
                 }
             }
-       // }
+        }
 
         /**print OutputFiles**/
   /*      System.out.println("print OutputFiles");
