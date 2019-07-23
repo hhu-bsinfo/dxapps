@@ -53,7 +53,7 @@ public class RunLumpPrRoundTask implements Task {
 
         short mySlaveNodeID = taskContext.getCtxData().getOwnNodeId();
 
-        System.out.println("RunLumpPrRoundTask - ececute");
+        System.out.println("RunLumpPrRoundTask - ececute: m_round" + m_round);
         Iterator<Long> localchunks = chunkService.cidStatus().getAllLocalChunkIDRanges(bootService.getNodeID()).iterator();
         localchunks.next();
         Vertex[] localVertices = new Vertex[(int)chunkService.status().getStatus(bootService.getNodeID()).getLIDStoreStatus().getCurrentLIDCounter() - 1];
