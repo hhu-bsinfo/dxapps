@@ -133,6 +133,7 @@ public class MainPR extends Application {
             chunkService.get().get(metaChunks[i]);
             memUsage += chunkService.status().getStatus(connectedSlaves.get(i)).getHeapStatus().getUsedSize().getBytes();
             edgeCnt += metaChunks[i].getEdgeCnt();
+            System.out.println ("iterating over connected slaves i="+i)
         }
         System.out.println("Metadata Chunks created");
         System.out.println("VERTICES: " + N);
