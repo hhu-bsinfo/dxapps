@@ -69,12 +69,16 @@ public class RunLumpPrRoundTask implements Task {
         double danglingPR = metaChunk.getPRsum();
         System.out.println("   **");
         if(!m_calcDanglingPR){
+            System.out.println("   !calcDanglingPR start");
+
             Stream.of(localVertices).parallel().forEach(localVertex -> {
                 if(localVertex.getOutDeg() != 0){
                     pageRankIter(localVertex,danglingPR,chunkService);
                 }
             });
         } else {
+            System.out.println("   calcDanglingPR start");
+
             Stream.of(localVertices).parallel().forEach(localVertex -> {
                 if(localVertex.getOutDeg() == 0){
                     pageRankIter(localVertex,danglingPR,chunkService);
