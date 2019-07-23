@@ -61,31 +61,24 @@ public class RunLumpPrRoundTask implements Task {
         for (int i = 0; i < localVertices.length; i++) {
             localVertices[i] = new Vertex(localchunks.next());
         }
-        System.out.println("   *");
         chunkService.get().get(localVertices);
 
         MetaChunk metaChunk = new MetaChunk(ChunkID.getChunkID(mySlaveNodeID,localVertices.length + 1));
         chunkService.get().get(metaChunk);
         double danglingPR = metaChunk.getPRsum();
-        System.out.println("   **");
         if(!m_calcDanglingPR){
-            System.out.println("   !calcDanglingPR start");
-
             Stream.of(localVertices).parallel().forEach(localVertex -> {
                 if(localVertex.getOutDeg() != 0){
                     pageRankIter(localVertex,danglingPR,chunkService);
                 }
             });
         } else {
-            System.out.println("   calcDanglingPR start");
-
             Stream.of(localVertices).parallel().forEach(localVertex -> {
                 if(localVertex.getOutDeg() == 0){
                     pageRankIter(localVertex,danglingPR,chunkService);
                 }
             });
         }
-        System.out.println("   ***");
         metaChunk.setPRsum(m_PRSum.sum());
         metaChunk.setPRerr(m_PRErr.sum());
         chunkService.put().put(metaChunk);
@@ -93,25 +86,19 @@ public class RunLumpPrRoundTask implements Task {
     }
 
     public void pageRankIter(Vertex p_vertex, double p_danglingPR, ChunkService p_chunkService){
-        System.out.println("pageRankIter start");
         long incidenceList[] = p_vertex.getM_inEdges();
         Vertex[] neighbors = new Vertex[incidenceList.length];
         double tmpPR = 0.0;
 
-        System.out.println("   1");
-
         for (int i = 0; i < incidenceList.length; i++) {
             neighbors[i] = new Vertex(incidenceList[i]);
         }
-        System.out.println("   2");
 
         p_chunkService.get().get(neighbors);
-        System.out.println("   3");
 
         for(Vertex tmp : neighbors){
             tmpPR += tmp.getPageRank(m_round)/(double)tmp.getOutDeg();
         }
-        System.out.println("   4");
 
         p_vertex.calcLumpPageRank(m_vertexCnt, m_damp, tmpPR, p_danglingPR ,Math.abs(m_round - 1));
 
@@ -123,8 +110,6 @@ public class RunLumpPrRoundTask implements Task {
         }
 
         p_chunkService.put().put(p_vertex);
-        System.out.println("pageRankIter end");
-
     }
 
     @Override

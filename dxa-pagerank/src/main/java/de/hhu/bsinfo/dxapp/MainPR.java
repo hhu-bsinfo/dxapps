@@ -223,7 +223,7 @@ public class MainPR extends Application {
         }
 
         /**print OutputFiles**/
-  /*      System.out.println("print OutputFiles");
+       System.out.println("print OutputFiles");
 
         String outDir = createOutputDirs();
 
@@ -239,7 +239,7 @@ public class MainPR extends Application {
                 }
             }
         }
-*/
+
   /*      System.out.println("print Statistics");
         double[] roundPRerrArr = roundPRerr.stream().mapToDouble(i -> i).toArray();
         long[] iterationTimesArr = iterationTimes.stream().mapToLong(i -> i).toArray();
