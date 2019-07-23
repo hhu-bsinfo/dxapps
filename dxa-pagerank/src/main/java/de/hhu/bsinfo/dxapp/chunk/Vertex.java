@@ -73,6 +73,10 @@ public class Vertex extends AbstractChunk {
     public int getOutDeg(){return m_outDeg;}
 
     public double getPageRank(int p_round){
+        if (m_pageRank.length==0) {
+            System.out.println("getPageRank: m_pageRank.length=0");
+            return 0.0;
+        }
         return m_pageRank[p_round];
     }
 
