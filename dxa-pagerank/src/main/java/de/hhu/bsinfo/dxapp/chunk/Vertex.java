@@ -63,6 +63,7 @@ public class Vertex extends AbstractChunk {
     }
 
     public void calcLumpPageRank(int N, double D, double p_sum, double p_danglingPR ,int p_round){
+        System.out.println("calcLumpPageRank, m_pageRank.length="+m_pageRank.length);
         m_pageRank[p_round] = (1 - D)/(double) N + D * p_sum + D * p_danglingPR / (double) N;
     }
 
