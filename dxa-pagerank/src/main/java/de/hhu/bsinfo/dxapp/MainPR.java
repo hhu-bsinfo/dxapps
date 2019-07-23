@@ -156,7 +156,6 @@ public class MainPR extends Application {
 
         if (computeService.getComputeRole() ==  ComputeRole.MASTER) {
 
-
             /**PageRank Iterations**/
             System.out.println("Run page rank iterations");
             for (int i = 0; i < MAX_ROUNDS; i++) {
@@ -211,7 +210,7 @@ public class MainPR extends Application {
         }
 
         /**Restore dangling PageRanks**/
-        System.out.println("Restore dangling PageRanks");
+    /*    System.out.println("Restore dangling PageRanks");
         RunLumpPrRoundTask calcDanglingPR = new RunLumpPrRoundTask(N,DAMPING_FACTOR,NumRounds % 2,true);
         TaskScript taskScriptCalcDanglingPR = new TaskScript(calcDanglingPR);
         state = computeService.submitTaskScript(taskScriptCalcDanglingPR,(short) 0);
@@ -223,9 +222,9 @@ public class MainPR extends Application {
 
             }
         }
-
+*/
         /**print OutputFiles**/
-        System.out.println("print OutputFiles");
+  /*      System.out.println("print OutputFiles");
 
         String outDir = createOutputDirs();
 
@@ -241,7 +240,7 @@ public class MainPR extends Application {
                 }
             }
         }
-
+*/
         System.out.println("print Statistics");
         double[] roundPRerrArr = roundPRerr.stream().mapToDouble(i -> i).toArray();
         long[] iterationTimesArr = iterationTimes.stream().mapToLong(i -> i).toArray();
