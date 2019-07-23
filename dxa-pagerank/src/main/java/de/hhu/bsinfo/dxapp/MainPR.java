@@ -154,56 +154,58 @@ public class MainPR extends Application {
         ArrayList<Long> iterationTimes = new ArrayList<>();
         TaskScriptState state;
 
-        if (computeService.getComputeRole() ==  ComputeRole.MASTER)
-            System.out.println("***MASTER***");
+        if (computeService.getComputeRole() ==  ComputeRole.MASTER) {
 
-        /**PageRank Iterations**/
-        System.out.println("Run page rank iterations");
-        for (int i = 0; i < MAX_ROUNDS; i++) {
-            danglingPR = 1;
-            PRerr = 0;
-            System.out.println("   iteration = " + i);
-            stopwatch.start();
 
-            if(i % 2 == 0){
-                state = computeService.submitTaskScript(taskScriptRun1, (short) 0);
-            } else {
-                state = computeService.submitTaskScript(taskScriptRun2, (short) 0);
-            }
+            /**PageRank Iterations**/
+            System.out.println("Run page rank iterations");
+            for (int i = 0; i < MAX_ROUNDS; i++) {
+                danglingPR = 1;
+                PRerr = 0;
+                System.out.println("   iteration = " + i);
+                stopwatch.start();
 
-            while (!state.hasTaskCompleted()) {
-                try {
-                    Thread.sleep(100);
-                } catch (final InterruptedException ignore) {
-
+                if (i % 2 == 0) {
+                    state = computeService.submitTaskScript(taskScriptRun1, (short) 0);
+                } else {
+                    state = computeService.submitTaskScript(taskScriptRun2, (short) 0);
                 }
-            }
 
-            chunkService.get().get(metaChunks);
+                while (!state.hasTaskCompleted()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (final InterruptedException ignore) {
 
-            for (MetaChunk metaChunk : metaChunks) {
-                PRerr += metaChunk.getPRerr();
-                danglingPR = danglingPR - metaChunk.getPRsum();
-            }
+                    }
+                }
 
-            for (MetaChunk metaChunk : metaChunks) {
-                metaChunk.setPRsum(danglingPR);
-            }
+                chunkService.get().get(metaChunks);
 
-            chunkService.put().put(metaChunks);
-            stopwatch.stop();
+                for (MetaChunk metaChunk : metaChunks) {
+                    PRerr += metaChunk.getPRerr();
+                    danglingPR = danglingPR - metaChunk.getPRsum();
+                }
 
-            roundPRerr.add(PRerr);
-            iterationTimes.add(stopwatch.getTime());
+                for (MetaChunk metaChunk : metaChunks) {
+                    metaChunk.setPRsum(danglingPR);
+                }
 
-            NumRounds++;
+                chunkService.put().put(metaChunks);
+                stopwatch.stop();
 
-            System.out.println("ROUND\t" + NumRounds);
-            System.out.println("TIME\t" + stopwatch.getTime());
-            System.out.println("ERROR\t" + PRerr);
+                roundPRerr.add(PRerr);
+                iterationTimes.add(stopwatch.getTime());
 
-            if (PRerr <= THRESHOLD) {
-                break;
+                NumRounds++;
+
+                System.out.println("ROUND\t" + NumRounds);
+                System.out.println("TIME\t" + stopwatch.getTime());
+                System.out.println("ERROR\t" + PRerr);
+
+                if (PRerr <= THRESHOLD) {
+                    break;
+                }
+
             }
 
         }
