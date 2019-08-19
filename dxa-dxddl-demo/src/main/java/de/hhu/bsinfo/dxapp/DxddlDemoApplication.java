@@ -29,7 +29,7 @@ public class DxddlDemoApplication extends Application {
         BootService bootService = getService(BootService.class);
 
         System.out.printf("\n");
-        System.out.printf("  DxddlDemoApplication\n", );
+        System.out.printf("  DxddlDemoApplication\n");
         System.out.printf("\n");
 
         // Put your application code running on the DXRAM node/peer here
