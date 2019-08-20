@@ -37,6 +37,9 @@ jar {
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    manifest {
+        attributes 'Application-Class': 'de.hhu.bsinfo.dxapp.HelloApplication'
+    }
 }
 
 task wrapper(type: Wrapper) {
