@@ -9,6 +9,8 @@ import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 import de.hhu.bsinfo.dxutils.NodeID;
 import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
+import de.hhu.bsinfo.dxram.ms.TaskScriptState;
+import de.hhu.bsinfo.dxram.ms.ComputeRole;
 import de.hhu.bsinfo.dxram.ms.script.TaskScript;
 import de.hhu.bsinfo.dxapp.tasks.*;
 
