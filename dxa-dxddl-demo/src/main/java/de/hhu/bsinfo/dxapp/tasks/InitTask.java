@@ -7,14 +7,19 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxapp.chunks.RootChunk;
+import de.hhu.bsinfo.dxram.boot.BootService;
+import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
 
 public class InitTask implements Task {
 
-    public GenerateDataTask() { }
+    public InitTask() { }
 
     @Override
     public int execute(TaskContext taskContext) {
+        BootService bootService = taskContext.getDXRAMServiceAccessor().getService(BootService.class);
+        ChunkService chunkService = taskContext.getDXRAMServiceAccessor().getService(ChunkService.class);
+
         System.out.printf("  DxddlDemoApplication: slave execute called.\n");
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
         short mySlaveIndex = taskContext.getCtxData().getSlaveId();
@@ -25,8 +30,10 @@ public class InitTask implements Task {
         chunkService.put().put( vc );
 
         // register metadata chunk in nameservice, name will be myNodeID
-        NameserviceService nameService = getService( NameserviceService.class );
-        nameService.register(vc, new Short(myNodeID).toSting() );
+        NameserviceService nameService = taskContext.getDXRAMServiceAccessor().getService( NameserviceService.class );
+        System.out.printf("  DxddlDemoApplication: slave registering root block with name = %s\n", new Short(myNodeID).toString());
+        nameService.register(vc, new Short(myNodeID).toString() );
+
 
         return 0;
     }

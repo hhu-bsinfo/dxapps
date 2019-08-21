@@ -1,6 +1,7 @@
 package de.hhu.bsinfo.dxapp;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import de.hhu.bsinfo.dxram.app.Application;
 import de.hhu.bsinfo.dxram.boot.BootService;
@@ -74,6 +75,7 @@ public class DxddlDemoApplication extends Application {
     @Override
     public void main(final String[] p_args) {
         BootService bootService = getService( BootService.class );
+        MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
 
         System.out.printf("\n");
         System.out.printf("  DxddlDemoApplication\n\n");
