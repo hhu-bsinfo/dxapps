@@ -54,21 +54,20 @@ public class DxddlDemoApplication extends Application {
         System.out.printf("  DxddlDemoApplication: all initialization tasks finished.\n");
 
 
-       // MetaChunk[] metaChunks = new MetaChunk[ connectedSlaves.size() ];
+        RootChunk[] rootChunks = new RootChunk[ connectedSlaves.size() ];
         for (int i = 0; i < connectedSlaves.size(); i++) {
             System.out.printf("  DxddlDemoApplication: name service lookup %d.\n", connectedSlaves.get(i));
 
-            // get root chunk of each slave
+            //
+            // get root chunk ID of each slave from naming service (the name is the NodeID of each slave)
+            //
             // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
             String nodeIDstr = Integer.toHexString(0xFFFF & connectedSlaves.get(i));
-            System.out.printf("  DxddlDemoApplication: name service lookup  = %s\n", nodeIDstr);
             long result = nameService.getChunkID(nodeIDstr, 1000);
-            System.out.printf("  DxddlDemoApplication: name service lookup result = %d\n", result);
 
-
-//            metaChunks[i] = new MetaChunk( ChunkID.getChunkID(connectedSlaves.get(i),0) );
-  //          chunkService.get().get( metaChunks[i] );
-    //        System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, metaChunks[i].mySlaveIndex);
+            rootChunks[i] = new RootChunk( result );
+            chunkService.get().get( rootChunks[i] );
+            System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, metaChunks[i].m_dummy);
         }
 
 
@@ -86,22 +85,6 @@ public class DxddlDemoApplication extends Application {
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
             master();
         }
-
-
-   /*     System.out.println("Register chunk " + chunkName + " in NameService");
-        nameService.register(100, chunkName);
-
-        System.out.println("Lookup entry " + chunkName +" in NameService");
-        long result = nameService.getChunkID(chunkName, 1000);
-        System.out.println("   returned chunkID = " + result);
-
-        System.out.println("ComputeRole");
-        if ( computeService.getComputeRole() == ComputeRole.MASTER )
-           System.out.println("   Master");
-       else
-           System.out.println("    Slave");
-*/
-        // Put your application code running on the DXRAM node/peer here
     }
 
     @Override

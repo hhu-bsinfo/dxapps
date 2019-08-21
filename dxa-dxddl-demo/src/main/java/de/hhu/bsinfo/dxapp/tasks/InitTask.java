@@ -24,18 +24,21 @@ public class InitTask implements Task {
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
         short mySlaveIndex = taskContext.getCtxData().getSlaveId();
 
+        //
         // create metadata chunk
+        //
         RootChunk vc = new RootChunk( mySlaveIndex );
         chunkService.create().create( myNodeID, vc);
         chunkService.put().put( vc );
 
+        //
         // register metadata chunk in nameservice, name will be myNodeID
+        //
         NameserviceService nameService = taskContext.getDXRAMServiceAccessor().getService( NameserviceService.class );
+
         // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
         String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
-        System.out.printf("  DxddlDemoApplication: slave registering nid=%d as str=%s.\n", myNodeID, nodeIDstr);
         nameService.register(vc, nodeIDstr);
-
 
         return 0;
     }
