@@ -12,7 +12,7 @@ import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
 import de.hhu.bsinfo.dxram.ms.TaskScriptState;
 import de.hhu.bsinfo.dxram.ms.ComputeRole;
 import de.hhu.bsinfo.dxram.ms.script.TaskScript;
-import de.hhu.bsinfo.dxapp.tasks.*;
+import de.hhu.bsinfo.dxapp.tasks.InitTask;
 
 /**
  * "DXDDL Demo" example DXRAM application.
@@ -30,29 +30,56 @@ public class DxddlDemoApplication extends Application {
         return "DxddlDemoApplication";
     }
 
+    // code executed on master
+    private void master() {
+        NameserviceService nameService = getService( NameserviceService.class );
+        MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
+        ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
+
+        System.out.printf("  DxddlDemoApplication: master firing init task on each slave.\n");
+
+        //
+        // generate data on each slave
+        //
+        InitTask generateDataTask = new InitTask();
+        TaskScript generateDataTaskScript = new TaskScript( generateDataTask );
+        TaskScriptState inputState = computeService.submitTaskScript( generateDataTaskScript, (short) 0);
+
+        // wait for all tasks to finish
+        while (!inputState.hasTaskCompleted()) {
+            try { Thread.sleep(100); }
+            catch (final InterruptedException ignore) { }
+        }
+        System.out.printf("  DxddlDemoApplication: all initialization tasks finished.\n");
+
+
+       // MetaChunk[] metaChunks = new MetaChunk[ connectedSlaves.size() ];
+        for (int i = 0; i < connectedSlaves.size(); i++) {
+            System.out.printf("  DxddlDemoApplication: name service lookup %d.\n", connectedSlaves.get(i));
+
+            // get root chunk of each slave
+            long result = nameService.getChunkID(new Short(connectedSlaves.get(i)).toString(), 1000);
+            System.out.printf("  DxddlDemoApplication: name service lookup result = %ld.\n", result);
+
+
+//            metaChunks[i] = new MetaChunk( ChunkID.getChunkID(connectedSlaves.get(i),0) );
+  //          chunkService.get().get( metaChunks[i] );
+    //        System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, metaChunks[i].mySlaveIndex);
+        }
+
+
+    }
+
+
     @Override
     public void main(final String[] p_args) {
         BootService bootService = getService( BootService.class );
-        NameserviceService nameService = getService( NameserviceService.class );
-        MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
-        String chunkName = "1";
 
         System.out.printf("\n");
         System.out.printf("  DxddlDemoApplication\n\n");
 
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
-            System.out.printf("  DxddlDemoApplication: master preparing data generation tasks.\n");
-
-            GenerateDataTask generateDataTask = new GenerateDataTask();
-            TaskScript generateDataTaskScript = new TaskScript( generateDataTask );
-            TaskScriptState inputState = computeService.submitTaskScript( generateDataTaskScript, (short) 0);
-
-            // wait for all tasks to finish
-            while (!inputState.hasTaskCompleted()) {
-                try { Thread.sleep(100); }
-                catch (final InterruptedException ignore) { }
-            }
-            System.out.printf("  DxddlDemoApplication: master data generation tasks finished.\n");
+            master();
         }
 
 
