@@ -8,7 +8,9 @@ import de.hhu.bsinfo.dxram.nameservice.NameserviceService;
 import de.hhu.bsinfo.dxram.engine.DXRAMVersion;
 import de.hhu.bsinfo.dxram.generated.BuildConfig;
 import de.hhu.bsinfo.dxutils.NodeID;
-import de.hhu.bsinfo.dxram.ms.*;
+import de.hhu.bsinfo.dxram.ms.MasterSlaveComputeService;
+import de.hhu.bsinfo.dxram.ms.script.TaskScript;
+import de.hhu.bsinfo.dxapp.tasks.*;
 
 /**
  * "DXDDL Demo" example DXRAM application.
@@ -34,24 +36,25 @@ public class DxddlDemoApplication extends Application {
         String chunkName = "1";
 
         System.out.printf("\n");
-        System.out.printf("  DxddlDemoApplication\n\n"");
+        System.out.printf("  DxddlDemoApplication\n\n");
 
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
-           GenerateDataTask generateDataTask = new GenerateDataTask();
-           TaskScript generateDataTaskScript = new TaskScript( generateDataTask );
-           TaskScriptState inputState = computeService.submitTaskScript( generateDataTaskScript, (short) 0);
+            System.out.printf("  DxddlDemoApplication: master preparing data generation tasks.\n");
 
-           while (!inputState.hasTaskCompleted()) {
-              try {
-                   Thread.sleep(100);
-              } catch (final InterruptedException ignore) {
+            GenerateDataTask generateDataTask = new GenerateDataTask();
+            TaskScript generateDataTaskScript = new TaskScript( generateDataTask );
+            TaskScriptState inputState = computeService.submitTaskScript( generateDataTaskScript, (short) 0);
 
-              }
-           }
+            // wait for all tasks to finish
+            while (!inputState.hasTaskCompleted()) {
+                try { Thread.sleep(100); }
+                catch (final InterruptedException ignore) { }
+            }
+            System.out.printf("  DxddlDemoApplication: master data generation tasks finished.\n");
         }
 
 
-        System.out.println("Register chunk " + chunkName + " in NameService");
+   /*     System.out.println("Register chunk " + chunkName + " in NameService");
         nameService.register(100, chunkName);
 
         System.out.println("Lookup entry " + chunkName +" in NameService");
@@ -63,7 +66,7 @@ public class DxddlDemoApplication extends Application {
            System.out.println("   Master");
        else
            System.out.println("    Slave");
-
+*/
         // Put your application code running on the DXRAM node/peer here
     }
 
