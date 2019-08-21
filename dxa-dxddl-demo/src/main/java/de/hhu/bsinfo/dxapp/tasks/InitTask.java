@@ -31,8 +31,10 @@ public class InitTask implements Task {
 
         // register metadata chunk in nameservice, name will be myNodeID
         NameserviceService nameService = taskContext.getDXRAMServiceAccessor().getService( NameserviceService.class );
-        System.out.printf("  DxddlDemoApplication: slave registering root block with name = %s\n", new Short(myNodeID).toString());
-        nameService.register(vc, new Short(myNodeID).toString() );
+        // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
+        String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
+        System.out.printf("  DxddlDemoApplication: slave registering nid=%d as str=%s.\n", myNodeID, nodeIDstr);
+        nameService.register(vc, nodeIDstr);
 
 
         return 0;

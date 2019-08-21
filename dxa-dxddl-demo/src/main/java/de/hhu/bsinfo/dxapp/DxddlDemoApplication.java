@@ -59,8 +59,11 @@ public class DxddlDemoApplication extends Application {
             System.out.printf("  DxddlDemoApplication: name service lookup %d.\n", connectedSlaves.get(i));
 
             // get root chunk of each slave
-            long result = nameService.getChunkID(new Short(connectedSlaves.get(i)).toString(), 1000);
-            System.out.printf("  DxddlDemoApplication: name service lookup result = %ld.\n", result);
+            // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
+            String nodeIDstr = Integer.toHexString(0xFFFF & connectedSlaves.get(i));
+            System.out.printf("  DxddlDemoApplication: name service lookup  = %s\n", nodeIDstr);
+            long result = nameService.getChunkID(nodeIDstr, 1000);
+            System.out.printf("  DxddlDemoApplication: name service lookup result = %d\n", result);
 
 
 //            metaChunks[i] = new MetaChunk( ChunkID.getChunkID(connectedSlaves.get(i),0) );
