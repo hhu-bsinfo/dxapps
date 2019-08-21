@@ -14,6 +14,8 @@ import de.hhu.bsinfo.dxram.ms.TaskScriptState;
 import de.hhu.bsinfo.dxram.ms.ComputeRole;
 import de.hhu.bsinfo.dxram.ms.script.TaskScript;
 import de.hhu.bsinfo.dxapp.tasks.InitTask;
+import de.hhu.bsinfo.dxapp.chunks.RootChunk;
+import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
 /**
  * "DXDDL Demo" example DXRAM application.
@@ -53,7 +55,10 @@ public class DxddlDemoApplication extends Application {
         }
         System.out.printf("  DxddlDemoApplication: all initialization tasks finished.\n");
 
-
+        //
+        // get root chunks from all slaves
+        //
+        ChunkService chunkService = getService(ChunkService.class);
         RootChunk[] rootChunks = new RootChunk[ connectedSlaves.size() ];
         for (int i = 0; i < connectedSlaves.size(); i++) {
             System.out.printf("  DxddlDemoApplication: name service lookup %d.\n", connectedSlaves.get(i));
@@ -67,7 +72,7 @@ public class DxddlDemoApplication extends Application {
 
             rootChunks[i] = new RootChunk( result );
             chunkService.get().get( rootChunks[i] );
-            System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, metaChunks[i].m_dummy);
+            System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, rootChunks[i].getDummy() );
         }
 
 

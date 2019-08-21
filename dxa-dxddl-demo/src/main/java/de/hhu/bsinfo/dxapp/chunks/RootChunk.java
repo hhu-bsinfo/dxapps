@@ -22,10 +22,14 @@ public class RootChunk extends AbstractChunk {
         m_dummy = rand.nextInt(32768);
     }
 
-    public double getMySlaveIndex() {
+    public RootChunk(long p_chunkID) {
+        super(p_chunkID);
+    }
+
+    public int getMySlaveIndex() {
         return m_mySlaveIndex;
     }
-    public double getDummy() {
+    public int getDummy() {
         return m_dummy;
     }
 
