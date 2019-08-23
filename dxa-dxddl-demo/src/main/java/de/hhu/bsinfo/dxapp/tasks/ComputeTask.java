@@ -48,6 +48,9 @@ public class ComputeTask implements Task {
         }
 
         System.out.printf("  DxddlDemoApplication (slave): ComputeTask sum = %d\n", sum);
+        rc.setSum( sum );
+        chunkService.put().put( rc );
+
         System.out.printf("  DxddlDemoApplication (slave): ComputeTask done.\n");
         return 0;
     }
