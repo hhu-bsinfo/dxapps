@@ -14,6 +14,7 @@ import de.hhu.bsinfo.dxram.ms.TaskScriptState;
 import de.hhu.bsinfo.dxram.ms.ComputeRole;
 import de.hhu.bsinfo.dxram.ms.script.TaskScript;
 import de.hhu.bsinfo.dxapp.tasks.InitTask;
+import de.hhu.bsinfo.dxapp.tasks.ComputeTask;
 import de.hhu.bsinfo.dxapp.chunks.RootChunk;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 

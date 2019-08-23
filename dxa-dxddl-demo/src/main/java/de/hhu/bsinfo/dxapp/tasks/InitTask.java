@@ -34,10 +34,12 @@ public class InitTask implements Task {
         RootChunk rc = new RootChunk( ChunkID.INVALID_ID,0 );
         chunkService.create().create( myNodeID, rc);
 
+        NodeChunk nc = new NodeChunk( myNodeID, rc.getRoot() );
         for (int i=0; i<ENTRIES; i++) {
-            NodeChunk nc = new NodeChunk( myNodeID+i, rc.getRoot() );
+            nc.setVal( myNodeID+i );
+            nc.setNext( rc.getRoot );
             chunkService.create().create(myNodeID, nc);
-            chunkService.put().put(nc);
+            chunkService.put().put( nc );
 
             rc.setRoot( nc.getID() );
         }

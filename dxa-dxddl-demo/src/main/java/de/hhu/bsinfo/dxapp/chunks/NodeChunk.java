@@ -25,14 +25,22 @@ public class NodeChunk extends AbstractChunk {
         super(p_chunkID);
     }
 
-    public int  getVal() {
+    public int getVal() {
         return m_val;
     }
 
-    public long getNext()  {
+    public long getNext() {
         return m_next;
     }
 
+    public void setVal(int val) {
+      m_val = val;
+    }
+
+    public void setNext(long next) {
+       m_next = next;
+    }
+ 
     @Override
     public void exportObject(Exporter p_exporter) {
         p_exporter.writeInt(m_val);
