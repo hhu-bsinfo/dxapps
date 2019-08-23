@@ -73,15 +73,13 @@ public class DxddlDemoApplication extends Application {
     }
 
     // get root chunks from all slaves
-    private void getRootChunksFromAllSlaves() {
+    private void getResultsFromSlaves() {
         NameserviceService nameService = getService( NameserviceService.class );
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
         ChunkService chunkService = getService(ChunkService.class);
 
         rootChunks = new RootChunk[ connectedSlaves.size() ];
         for (int i = 0; i < connectedSlaves.size(); i++) {
-            System.out.printf("  DxddlDemoApplication (master): name service lookup %d.\n", connectedSlaves.get(i));
-
             //
             // get root chunk ID of each slave from naming service (the name is the NodeID of each slave)
             //
@@ -91,7 +89,7 @@ public class DxddlDemoApplication extends Application {
 
             rootChunks[i] = new RootChunk( result );
             chunkService.get().get( rootChunks[i] );
-            System.out.printf("  DxddlDemoApplication (master): metadata from slave %d = %d\n", i, rootChunks[i].getSum() );
+            System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, rootChunks[i].getSum() );
         }
     }
 
@@ -102,9 +100,7 @@ public class DxddlDemoApplication extends Application {
 
         slavesCompute();
 
-        getRootChunksFromAllSlaves();
-
-
+        getResultsFromSlaves();
     }
 
 
