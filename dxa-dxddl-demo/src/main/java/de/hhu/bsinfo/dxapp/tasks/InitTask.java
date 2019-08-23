@@ -41,8 +41,6 @@ public class InitTask implements Task {
             chunkService.create().create(myNodeID, nc);
             chunkService.put().put( nc );
 
-            System.out.printf("  DxddlDemoApplication (slave):    adding entry %d\n", nc.getVal() );
-
             rc.setRoot( nc.getID() );
         }
 
