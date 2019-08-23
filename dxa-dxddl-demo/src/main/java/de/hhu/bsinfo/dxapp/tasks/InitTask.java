@@ -36,10 +36,12 @@ public class InitTask implements Task {
 
         NodeChunk nc = new NodeChunk( myNodeID, rc.getRoot() );
         for (int i=0; i<ENTRIES; i++) {
-            nc.setVal( myNodeID+i );
-            nc.setNext( rc.getRoot );
+            nc.setVal( Math.abs(myNodeID) + i );
+            nc.setNext( rc.getRoot() );
             chunkService.create().create(myNodeID, nc);
             chunkService.put().put( nc );
+
+            System.out.printf("  DxddlDemoApplication (slave):    adding entry %d\n", nc.getVal() );
 
             rc.setRoot( nc.getID() );
         }

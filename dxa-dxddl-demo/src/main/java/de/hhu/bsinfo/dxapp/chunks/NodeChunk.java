@@ -40,7 +40,7 @@ public class NodeChunk extends AbstractChunk {
     public void setNext(long next) {
        m_next = next;
     }
- 
+
     @Override
     public void exportObject(Exporter p_exporter) {
         p_exporter.writeInt(m_val);
