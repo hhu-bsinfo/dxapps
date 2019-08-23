@@ -30,7 +30,7 @@ public class InitTask implements Task {
         //
         // create list
         //
-        RootChunk rc = new RootChunk(0,0);
+        RootChunk rc = new RootChunk( ChunkID.INVALID_ID,0 );
         chunkService.create().create( myNodeID, rc);
 
         for (int i=0; i<ENTRIES; i++) {

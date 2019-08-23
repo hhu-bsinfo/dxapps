@@ -23,6 +23,9 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * @author Michael Schoettner, michael.schoettner@hhu.de, 19.08.2019
  */
 public class DxddlDemoApplication extends Application {
+    BootService bootService;
+    MasterSlaveComputeService computeService;
+    ChunkService chunkService;
     RootChunk[] rootChunks;     // root chunks on all slaves (for accessing data)
 
 
@@ -55,7 +58,6 @@ public class DxddlDemoApplication extends Application {
     // get root chunks from all slaves
     private void getRootChunksFromAllSlaves() {
         NameserviceService nameService = getService( NameserviceService.class );
-        MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
         ChunkService chunkService = getService(ChunkService.class);
 
@@ -72,7 +74,7 @@ public class DxddlDemoApplication extends Application {
 
             rootChunks[i] = new RootChunk( result );
             chunkService.get().get( rootChunks[i] );
-            System.out.printf("  DxddlDemoApplication (master): metadata from slave %d = %d\n", i, rootChunks[i].getDummy() );
+            System.out.printf("  DxddlDemoApplication (master): metadata from slave %d = %d\n", i, rootChunks[i].getSum() );
         }
     }
 
@@ -84,14 +86,14 @@ public class DxddlDemoApplication extends Application {
         getRootChunksFromAllSlaves();
 
 
-
     }
 
 
     @Override
     public void main(final String[] p_args) {
-        BootService bootService = getService( BootService.class );
-        MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
+        bootService = getService( BootService.class );
+        computeService = getService( MasterSlaveComputeService.class );
+        chunkService = getService(ChunkService.class);
 
         System.out.printf("\n");
         System.out.printf("  DxddlDemoApplication: main\n");
