@@ -23,6 +23,9 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * @author Michael Schoettner, michael.schoettner@hhu.de, 19.08.2019
  */
 public class DxddlDemoApplication extends Application {
+    RootChunk[] rootChunks;     // root chunks on all slaves (for accessing data)
+
+
     @Override
     public DXRAMVersion getBuiltAgainstVersion() {
         return BuildConfig.DXRAM_VERSION;
@@ -33,35 +36,32 @@ public class DxddlDemoApplication extends Application {
         return "DxddlDemoApplication";
     }
 
-    // code executed on master
-    private void master() {
+    // execute initialization task on each slave
+    private void initAllSlaves() {
+        InitTask generateDataTask = new InitTask();
+        TaskScript generateDataTaskScript = new TaskScript(generateDataTask);
+        TaskScriptState inputState = computeService.submitTaskScript(generateDataTaskScript, (short) 0);
+
+        // wait for all slave tasks to finish
+        while (!inputState.hasTaskCompleted()) {
+            try {
+                Thread.sleep(100);
+            } catch (final InterruptedException ignore) {
+            }
+        }
+        System.out.printf("  DxddlDemoApplication (master): initAllSlaves done.\n");
+    }
+
+    // get root chunks from all slaves
+    private void getRootChunksFromAllSlaves() {
         NameserviceService nameService = getService( NameserviceService.class );
         MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
-
-        System.out.printf("  DxddlDemoApplication: master firing init task on each slave.\n");
-
-        //
-        // generate data on each slave
-        //
-        InitTask generateDataTask = new InitTask();
-        TaskScript generateDataTaskScript = new TaskScript( generateDataTask );
-        TaskScriptState inputState = computeService.submitTaskScript( generateDataTaskScript, (short) 0);
-
-        // wait for all tasks to finish
-        while (!inputState.hasTaskCompleted()) {
-            try { Thread.sleep(100); }
-            catch (final InterruptedException ignore) { }
-        }
-        System.out.printf("  DxddlDemoApplication: all initialization tasks finished.\n");
-
-        //
-        // get root chunks from all slaves
-        //
         ChunkService chunkService = getService(ChunkService.class);
-        RootChunk[] rootChunks = new RootChunk[ connectedSlaves.size() ];
+
+        rootChunks = new RootChunk[ connectedSlaves.size() ];
         for (int i = 0; i < connectedSlaves.size(); i++) {
-            System.out.printf("  DxddlDemoApplication: name service lookup %d.\n", connectedSlaves.get(i));
+            System.out.printf("  DxddlDemoApplication (master): name service lookup %d.\n", connectedSlaves.get(i));
 
             //
             // get root chunk ID of each slave from naming service (the name is the NodeID of each slave)
@@ -72,8 +72,17 @@ public class DxddlDemoApplication extends Application {
 
             rootChunks[i] = new RootChunk( result );
             chunkService.get().get( rootChunks[i] );
-            System.out.printf("  DxddlDemoApplication: metadata from slave %d = %d\n", i, rootChunks[i].getDummy() );
+            System.out.printf("  DxddlDemoApplication (master): metadata from slave %d = %d\n", i, rootChunks[i].getDummy() );
         }
+    }
+
+        // code executed on master
+    private void master() {
+
+        initAllSlaves();
+
+        getRootChunksFromAllSlaves();
+
 
 
     }
@@ -85,7 +94,7 @@ public class DxddlDemoApplication extends Application {
         MasterSlaveComputeService computeService = getService( MasterSlaveComputeService.class );
 
         System.out.printf("\n");
-        System.out.printf("  DxddlDemoApplication\n\n");
+        System.out.printf("  DxddlDemoApplication: main\n");
 
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
             master();
