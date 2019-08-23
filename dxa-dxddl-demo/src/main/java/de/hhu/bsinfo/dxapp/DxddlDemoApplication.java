@@ -40,7 +40,7 @@ public class DxddlDemoApplication extends Application {
     }
 
     // execute initialization task on each slave
-    private void initAllSlaves() {
+    private void slavesInit() {
         InitTask generateDataTask = new InitTask();
         TaskScript generateDataTaskScript = new TaskScript(generateDataTask);
         TaskScriptState inputState = computeService.submitTaskScript(generateDataTaskScript, (short) 0);
@@ -52,7 +52,23 @@ public class DxddlDemoApplication extends Application {
             } catch (final InterruptedException ignore) {
             }
         }
-        System.out.printf("  DxddlDemoApplication (master): initAllSlaves done.\n");
+        System.out.printf("  DxddlDemoApplication (master): slavesInit done.\n");
+    }
+
+    // execute compute slavesCompute on each slave
+    private void slavesCompute() {
+        ComputeTask generateDataTask = new ComputeTask();
+        TaskScript generateDataTaskScript = new TaskScript(generateDataTask);
+        TaskScriptState inputState = computeService.submitTaskScript(generateDataTaskScript, (short) 0);
+
+        // wait for all slave tasks to finish
+        while (!inputState.hasTaskCompleted()) {
+            try {
+                Thread.sleep(100);
+            } catch (final InterruptedException ignore) {
+            }
+        }
+        System.out.printf("  DxddlDemoApplication (master): slavesCompute done.\n");
     }
 
     // get root chunks from all slaves
@@ -81,7 +97,9 @@ public class DxddlDemoApplication extends Application {
         // code executed on master
     private void master() {
 
-        initAllSlaves();
+        slavesInit();
+
+        slavesCompute();
 
         getRootChunksFromAllSlaves();
 

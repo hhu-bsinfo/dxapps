@@ -10,6 +10,7 @@ import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxapp.chunks.RootChunk;
 import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
 
 
 public class InitTask implements Task {
@@ -25,7 +26,7 @@ public class InitTask implements Task {
 
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
 
-        System.out.printf("  DxddlDemoApplication (slave): execute called.\n");
+        System.out.printf("  DxddlDemoApplication (slave): InitTask.execute called.\n");
 
         //
         // create list
@@ -53,6 +54,7 @@ public class InitTask implements Task {
         String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
         nameService.register(rc, nodeIDstr);
 
+        System.out.printf("  DxddlDemoApplication (slave): InitTask.execute done\n");
         return 0;
     }
 
