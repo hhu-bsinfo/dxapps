@@ -17,6 +17,7 @@ import de.hhu.bsinfo.dxapp.tasks.InitTask;
 import de.hhu.bsinfo.dxapp.tasks.ComputeTask;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
+import de.hhu.bsinfo.dxmem.data.ChunkID;
 
 /**
  * "DXDDL Demo" example DXRAM application.
@@ -89,12 +90,13 @@ public class DxddlDemoApplication extends Application {
             String nodeIDstr = Integer.toHexString(0xFFFF & connectedSlaves.get(i));
             long result = nameService.getChunkID(nodeIDstr, NAME_SERVICE_LOOKUP_TIMEOUT);
             if (result == ChunkID.INVALID_ID) {
-                throw new ElementAlreadyExistsException(String.format("(master) Nameservice lookup failed for slave %s.", connectedSlaves.get(i)));
+                System.out.printf("(master) Nameservice lookup failed for slave %s.", connectedSlaves.get(i) );
             }
-
-            headChunks[i] = new HeadChunk( result );
-            chunkService.get().get( headChunks[i] );
-            System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, headChunks[i].getSum() );
+            else {
+               headChunks[i] = new HeadChunk( result );
+               chunkService.get().get( headChunks[i] );
+               System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, headChunks[i].getSum() );
+            }
         }
     }
 

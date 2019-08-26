@@ -10,6 +10,7 @@ import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
+import de.hhu.bsinfo.dxapp.DxddlDemoApplication;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 
 
@@ -57,10 +58,11 @@ public class InitTask implements Task {
 
         // name-service entry should not be used
         if (nameService.getChunkID(nodeIDstr, DxddlDemoApplication.NAME_SERVICE_LOOKUP_TIMEOUT) != ChunkID.INVALID_ID) {
-            throw new ElementAlreadyExistsException(String.format("(slave) Cannot register nameservice entry for slave %x", myNodeID));
+            System.out.printf( "(slave) Cannot register nameservice entry for slave %x", myNodeID );
         }
-
-        nameService.register(rc, nodeIDstr);
+        else {
+           nameService.register(rc, nodeIDstr);
+        }
         System.out.printf("  DxddlDemoApplication (slave): InitTask.execute done\n");
         return 0;
     }
