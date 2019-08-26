@@ -5,7 +5,7 @@
 The applications in this repository are part of the [DXRAM](https://github.com/hhu-bsinfo/dxram) key-value storage.
 
 * [HelloWorld](dxa-helloworld/README.md): Minimal example to get started with developing applications for DXRAM
-* [PageRank](dxa-pagerank/README.md): Distributed and parallel page rank 
+* [MasterSlave](dxa-masterslave/README.md): Basic master-slave example 
 * [ChunkBench](dxa-chunkbench/README.md): A benchmark similar to the Yahoo! Cloud Service Benchmark to test and
 * [Migration](dxa-migration/README.md): Test and benchmark DXRAM's migration
 * [Terminal](dxa-terminal/README.md): Terminal server and client which provides a CLI to connect to DXRAM peers and run
