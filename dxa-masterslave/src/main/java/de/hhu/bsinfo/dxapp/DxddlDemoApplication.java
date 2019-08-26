@@ -15,7 +15,7 @@ import de.hhu.bsinfo.dxram.ms.ComputeRole;
 import de.hhu.bsinfo.dxram.ms.script.TaskScript;
 import de.hhu.bsinfo.dxapp.tasks.InitTask;
 import de.hhu.bsinfo.dxapp.tasks.ComputeTask;
-import de.hhu.bsinfo.dxapp.chunks.RootChunk;
+import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 
 /**
@@ -24,10 +24,12 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
  * @author Michael Schoettner, michael.schoettner@hhu.de, 19.08.2019
  */
 public class DxddlDemoApplication extends Application {
+    public final static int NAME_SERVICE_LOOKUP_TIMEOUT = 2000;    // 2s
+
     BootService bootService;
     MasterSlaveComputeService computeService;
     ChunkService chunkService;
-    RootChunk[] rootChunks;     // root chunks on all slaves (for accessing data)
+    HeadChunk[] headChunks;     // head chunks on all slaves (for accessing data)
 
 
     @Override
@@ -72,37 +74,29 @@ public class DxddlDemoApplication extends Application {
         System.out.printf("  DxddlDemoApplication (master): slavesCompute done.\n");
     }
 
-    // get root chunks from all slaves
+    // get head chunks from all slaves
     private void getResultsFromSlaves() {
         NameserviceService nameService = getService( NameserviceService.class );
         ArrayList<Short> connectedSlaves = computeService.getStatusMaster((short) 0).getConnectedSlaves();
         ChunkService chunkService = getService(ChunkService.class);
 
-        rootChunks = new RootChunk[ connectedSlaves.size() ];
+        headChunks = new HeadChunk[ connectedSlaves.size() ];
         for (int i = 0; i < connectedSlaves.size(); i++) {
             //
-            // get root chunk ID of each slave from naming service (the name is the NodeID of each slave)
+            // get head chunk ID of each slave from naming service (the name is the NodeID of each slave)
             //
             // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
             String nodeIDstr = Integer.toHexString(0xFFFF & connectedSlaves.get(i));
-            long result = nameService.getChunkID(nodeIDstr, 1000);
+            long result = nameService.getChunkID(nodeIDstr, NAME_SERVICE_LOOKUP_TIMEOUT);
+            if (result == ChunkID.INVALID_ID) {
+                throw new ElementAlreadyExistsException(String.format("(master) Nameservice lookup failed for slave %s.", connectedSlaves.get(i)));
+            }
 
-            rootChunks[i] = new RootChunk( result );
-            chunkService.get().get( rootChunks[i] );
-            System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, rootChunks[i].getSum() );
+            headChunks[i] = new HeadChunk( result );
+            chunkService.get().get( headChunks[i] );
+            System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, headChunks[i].getSum() );
         }
     }
-
-        // code executed on master
-    private void master() {
-
-        slavesInit();
-
-        slavesCompute();
-
-        getResultsFromSlaves();
-    }
-
 
     @Override
     public void main(final String[] p_args) {
@@ -111,10 +105,16 @@ public class DxddlDemoApplication extends Application {
         chunkService = getService(ChunkService.class);
 
         System.out.printf("\n");
-        System.out.printf("  DxddlDemoApplication: main\n");
 
+        // master submits & coordinates slave tasks
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
-            master();
+            System.out.printf("  DxddlDemoApplication (master): main\n");
+            slavesInit();
+            slavesCompute();
+            getResultsFromSlaves();
+        }
+        else {
+            System.out.printf("  DxddlDemoApplication (slave): main\n");
         }
     }
 

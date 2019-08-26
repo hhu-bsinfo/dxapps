@@ -8,7 +8,7 @@ import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
-import de.hhu.bsinfo.dxapp.chunks.RootChunk;
+import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 
@@ -25,12 +25,12 @@ public class ComputeTask implements Task {
         System.out.printf("  DxddlDemoApplication (slave): ComputeTask.execute called.\n");
 
         //
-        // get our root chunk from name service
+        // get our head chunk from name service
         //
         String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
         long metaChunkID = nameService.getChunkID(nodeIDstr, 1000);
 
-        RootChunk rc = new RootChunk( metaChunkID );
+        HeadChunk rc = new HeadChunk( metaChunkID );
         chunkService.get().get( rc );
 
         //
@@ -38,7 +38,7 @@ public class ComputeTask implements Task {
         //
         int sum = 0;
 
-        NodeChunk nc = new NodeChunk( rc.getRoot() );
+        NodeChunk nc = new NodeChunk( rc.getHead() );
         while (nc.getID() != ChunkID.INVALID_ID) {
             chunkService.get().get( nc );
 

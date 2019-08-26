@@ -8,7 +8,7 @@ import de.hhu.bsinfo.dxutils.serialization.Exporter;
 import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
-import de.hhu.bsinfo.dxapp.chunks.RootChunk;
+import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 
@@ -31,20 +31,20 @@ public class InitTask implements Task {
         //
         // create list
         //
-        RootChunk rc = new RootChunk( ChunkID.INVALID_ID,0 );
+        HeadChunk rc = new HeadChunk( ChunkID.INVALID_ID,0 );
         chunkService.create().create( myNodeID, rc);
 
-        NodeChunk nc = new NodeChunk( myNodeID, rc.getRoot() );
+        NodeChunk nc = new NodeChunk( myNodeID, rc.getHead() );
         for (int i=0; i<ENTRIES; i++) {
             nc.setVal( Math.abs(myNodeID) + i );
-            nc.setNext( rc.getRoot() );
+            nc.setNext( rc.getHead() );
             chunkService.create().create(myNodeID, nc);
             chunkService.put().put( nc );
 
-            rc.setRoot( nc.getID() );
+            rc.setHead( nc.getID() );
         }
 
-        // write root chunk to DXMem
+        // write head chunk to DXMem
         chunkService.put().put( rc );
 
         //
@@ -54,8 +54,13 @@ public class InitTask implements Task {
 
         // we cannot simply convert the NodeID to a string as it might be negative and then the name would be too long
         String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
-        nameService.register(rc, nodeIDstr);
 
+        // name-service entry should not be used
+        if (nameService.getChunkID(nodeIDstr, DxddlDemoApplication.NAME_SERVICE_LOOKUP_TIMEOUT) != ChunkID.INVALID_ID) {
+            throw new ElementAlreadyExistsException(String.format("(slave) Cannot register nameservice entry for slave %x", myNodeID));
+        }
+
+        nameService.register(rc, nodeIDstr);
         System.out.printf("  DxddlDemoApplication (slave): InitTask.execute done\n");
         return 0;
     }
