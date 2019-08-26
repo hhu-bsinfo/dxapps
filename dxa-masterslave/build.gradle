@@ -33,7 +33,7 @@ dependencies {
 }
 
 jar {
-    archiveName 'dxa-dxddl-demo.jar'
+    archiveName 'dxa-masterslave.jar'
     from {
         configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
