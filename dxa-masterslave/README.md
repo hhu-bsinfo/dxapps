@@ -8,7 +8,7 @@ basic chained list using chunks (NodeChunk) and register the head (HeadChunk) of
 In the ComputeTask, the slaves sum up the values of all entries in their local list and store the result in their
 HeadChunk. The master does not execute tasks but only controls them.
 
-##Compiling
+## Compiling
 The application requires the development version of DXRAM. To compile athe application, simply run the *build.sh* script
 in the application directory:
 ```
@@ -16,7 +16,7 @@ in the application directory:
 ```
 The output jar-file will be located within *~/build/libs/dxa-masterslave.jar*.
 
-##Deployment and running an application
+## Deployment and running an application
 You need at least four DXRAM instances running. The easiest way is an interactive setup using a shell or going for
 [cdepl](https://github.com/hhu-bsinfo/cdepl). Below is the interactive approach, each starting in the DXRAM homedirectory
 of DXRAM.
