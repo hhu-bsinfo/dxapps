@@ -4,7 +4,11 @@ The master-slave application is described [here](https://github.com/hhu-bsinfo/d
 In this example the chained lists are realized using DXDdl including direct memory access.
 
 ## Compiling
-The application requires the development version of DXRAM. To compile athe application, simply run the *build.sh* script
+First you need to generate the api.jar file using the DXDdl compiler.
+
+to be written
+
+The application requires the development version of DXRAM. To compile the application, simply run the *build.sh* script
 in the application directory:
 ```
 ./build.sh

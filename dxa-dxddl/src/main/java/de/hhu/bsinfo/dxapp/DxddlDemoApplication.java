@@ -18,13 +18,14 @@ import de.hhu.bsinfo.dxapp.tasks.ComputeTask;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxddl.api.*;
 
 /**
  * "DXDDL Demo" example DXRAM application.
  *
- * @author Michael Schoettner, michael.schoettner@hhu.de, 19.08.2019
+ * @author Michael Schoettner, michael.schoettner@hhu.de, 29.08.2019
  */
-public class DxddlDemoApplication extends Application {
+public class DxddlDemoApplication extends DirectAccessApplication {
     public final static int NAME_SERVICE_LOOKUP_TIMEOUT = 2000;    // 2s
 
     BootService bootService;
