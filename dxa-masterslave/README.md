@@ -1,12 +1,24 @@
 # DXApp Master-Slave example and template
-This application provides a minimal Master-Slave example. The master executes two tasks ((InitTask and ComputeTask) on
-all slaves in super steps. The ComputeTask is started after all slaves have finished the InitTask. After all slaves
-have finished the ComputeTask, the master retrieves and prints the results of the slaves by retrieving the HeadChunk
-(storing results computed on a slave) registered by each slave in the naming service. Each slave uses its NodeID as
-a name for its HeadChunk which is unique thus avoiding naming collisions. In the InitTask, the slaves create a very
-basic chained list using chunks (NodeChunk) and register the head (HeadChunk) of the list in the naming service.
-In the ComputeTask, the slaves sum up the values of all entries in their local list and store the result in their
-HeadChunk. The master does not execute tasks but only controls them.
+This application provides a minimal Master-Slave example for a embarrassingly parallel distributed computation. This
+means there are no data dependencies between computations. Each slave creates a chained list of integers, calculates
+the sum of all list elements, and stores its local sum in the head of the list which is registered in the naming service.
+The master prints out the results of each slave by accessing the heads registered in the naming service.
+
+In DXRAM, the master only controls tasks and does not execute tasks itself. In this example, the master executes two
+tasks: `InitTask` and `ComputeTask` - on all slaves in super steps. The latter is realized within the example code -
+the master waits for all slaves to finish the `InitTask` before it starts the `ComputeTask`.
+
+Within the `InitTask`, each slave creates a chained list using chunks (`NodeChunk` storing an integer) and registers
+the head (`HeadChunk`) of the list in the naming service. Each slave uses its NodeID as the name for its `HeadChunk`
+which is unique in order to avoid name collisions.
+
+The master fires the `ComputeTask` after all slaves have finished the `InitTask`. As written above all slaves compute
+the sum of all entries in their local list. The result is stored in the `HeadChunk` which was already registered in
+the naming service by the `InitTask`.
+
+After all slaves have finished the `ComputeTask`, the master fetches the results from each `HeadChunk` using the 
+naming service.
+
 
 ## Compiling
 The application requires the development version of DXRAM. To compile athe application, simply run the *build.sh* script
