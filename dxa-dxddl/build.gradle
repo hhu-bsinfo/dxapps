@@ -28,7 +28,7 @@ compileJava {
 
 dependencies {
     providedImplementation 'de.hhu.bsinfo:dxram:0.8.0' + (Boolean.valueOf(System.getProperty("release")) ? "" : "-SNAPSHOT")
-
+    implementation fileTree(dir: 'libs', includes: ['*.jar']) 
     testImplementation 'junit:junit:4.12'
 }
 

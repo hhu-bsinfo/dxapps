@@ -18,7 +18,7 @@ import de.hhu.bsinfo.dxapp.tasks.ComputeTask;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
-import de.hhu.bsinfo.dxddl.api.*;
+import de.hhu.bsinfo.dxddl.api.DirectAccessApplication;
 
 /**
  * "DXDDL Demo" example DXRAM application.
