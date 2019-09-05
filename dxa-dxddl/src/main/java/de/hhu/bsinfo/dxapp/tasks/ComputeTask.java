@@ -9,8 +9,8 @@ import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
-import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxddl.api.DirectNode;
 
 public class ComputeTask implements Task {
 
@@ -37,14 +37,11 @@ public class ComputeTask implements Task {
         // calculate sum of all list entries
         //
         int sum = 0;
+        long dnID = rc.getHead();
 
-        NodeChunk nc = new NodeChunk( rc.getHead() );
-        while (nc.getID() != ChunkID.INVALID_ID) {
-            chunkService.get().get( nc );
-
-            sum += nc.getVal();
-
-            nc.setID( nc.getNext() );
+        while ( dnID != ChunkID.INVALID_ID ) {
+            sum += DirectNode.getVal( dnID );
+            dnID = DirectNode.getNextNodeID( dnID );
         }
 
         System.out.printf("  DxddlDemoApplication (slave): ComputeTask sum = %d\n", sum);

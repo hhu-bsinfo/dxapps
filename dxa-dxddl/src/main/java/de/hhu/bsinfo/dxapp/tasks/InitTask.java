@@ -9,9 +9,9 @@ import de.hhu.bsinfo.dxutils.serialization.Importer;
 import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
-import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
 import de.hhu.bsinfo.dxapp.DxddlDemoApplication;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
+import de.hhu.bsinfo.dxddl.api.DirectNode;
 
 
 public class InitTask implements Task {
@@ -22,7 +22,6 @@ public class InitTask implements Task {
 
     @Override
     public int execute(TaskContext taskContext) {
-        BootService bootService = taskContext.getDXRAMServiceAccessor().getService(BootService.class);
         ChunkService chunkService = taskContext.getDXRAMServiceAccessor().getService(ChunkService.class);
 
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
@@ -35,14 +34,13 @@ public class InitTask implements Task {
         HeadChunk rc = new HeadChunk( ChunkID.INVALID_ID,0 );
         chunkService.create().create( myNodeID, rc);
 
-        NodeChunk nc = new NodeChunk( myNodeID, rc.getHead() );
+       // NodeChunk nc = new NodeChunk( myNodeID, rc.getHead() );
         for (int i=0; i<ENTRIES; i++) {
-            nc.setVal( Math.abs(myNodeID) + i );
-            nc.setNext( rc.getHead() );
-            chunkService.create().create(myNodeID, nc);
-            chunkService.put().put( nc );
+            long dnID = DirectNode.create();
+            DirectNode.setVal( dnID, Math.abs(myNodeID) + i  );
+            DirectNode.setNextNodeID(dnID, rc.getHead() );
 
-            rc.setHead( nc.getID() );
+            rc.setHead( dnID );
         }
 
         // write head chunk to DXMem
