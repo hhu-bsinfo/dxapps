@@ -1,0 +1,5 @@
+chunk Node {
+  int val;
+  Node next;
+}
+
