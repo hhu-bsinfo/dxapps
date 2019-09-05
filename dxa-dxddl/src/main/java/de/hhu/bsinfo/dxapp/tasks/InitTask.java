@@ -34,7 +34,6 @@ public class InitTask implements Task {
         HeadChunk rc = new HeadChunk( ChunkID.INVALID_ID,0 );
         chunkService.create().create( myNodeID, rc);
 
-       // NodeChunk nc = new NodeChunk( myNodeID, rc.getHead() );
         for (int i=0; i<ENTRIES; i++) {
             long dnID = DirectNode.create();
             DirectNode.setVal( dnID, Math.abs(myNodeID) + i  );
