@@ -20,11 +20,11 @@ import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 
 /**
- * "DXDDL Demo" example DXRAM application.
+ * Master-slave example DXRAM application.
  *
  * @author Michael Schoettner, michael.schoettner@hhu.de, 19.08.2019
  */
-public class DxddlDemoApplication extends Application {
+public class MasterSlaveDemoApplication extends Application {
     public final static int NAME_SERVICE_LOOKUP_TIMEOUT = 2000;    // 2s
 
     BootService bootService;
@@ -40,7 +40,7 @@ public class DxddlDemoApplication extends Application {
 
     @Override
     public String getApplicationName() {
-        return "DxddlDemoApplication";
+        return "MasterSlaveDemoApplication";
     }
 
     // execute initialization task on each slave
@@ -56,7 +56,7 @@ public class DxddlDemoApplication extends Application {
             } catch (final InterruptedException ignore) {
             }
         }
-        System.out.printf("  DxddlDemoApplication (master): slavesInit done.\n");
+        System.out.printf("  MasterSlaveDemoApplication (master): slavesInit done.\n");
     }
 
     // execute compute slavesCompute on each slave
@@ -72,7 +72,7 @@ public class DxddlDemoApplication extends Application {
             } catch (final InterruptedException ignore) {
             }
         }
-        System.out.printf("  DxddlDemoApplication (master): slavesCompute done.\n");
+        System.out.printf("  MasterSlaveDemoApplication (master): slavesCompute done.\n");
     }
 
     // get head chunks from all slaves
@@ -95,7 +95,7 @@ public class DxddlDemoApplication extends Application {
             else {
                headChunks[i] = new HeadChunk( result );
                chunkService.get().get( headChunks[i] );
-               System.out.printf("  DxddlDemoApplication (master): result of slave %d = %d\n", i, headChunks[i].getSum() );
+               System.out.printf("  MasterSlaveDemoApplication (master): result of slave %d = %d\n", i, headChunks[i].getSum() );
             }
         }
     }
@@ -110,13 +110,13 @@ public class DxddlDemoApplication extends Application {
 
         // master submits & coordinates slave tasks
         if ( computeService.getComputeRole() == ComputeRole.MASTER ) {
-            System.out.printf("  DxddlDemoApplication (master): main\n");
+            System.out.printf("  MasterSlaveDemoApplication (master): main\n");
             slavesInit();
             slavesCompute();
             getResultsFromSlaves();
         }
         else {
-            System.out.printf("  DxddlDemoApplication (slave): main\n");
+            System.out.printf("  MasterSlaveDemoApplication (slave): main\n");
         }
     }
 

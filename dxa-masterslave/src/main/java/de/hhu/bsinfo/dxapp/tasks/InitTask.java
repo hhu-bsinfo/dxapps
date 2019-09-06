@@ -10,7 +10,7 @@ import de.hhu.bsinfo.dxram.boot.BootService;
 import de.hhu.bsinfo.dxram.chunk.ChunkService;
 import de.hhu.bsinfo.dxapp.chunks.HeadChunk;
 import de.hhu.bsinfo.dxapp.chunks.NodeChunk;
-import de.hhu.bsinfo.dxapp.DxddlDemoApplication;
+import de.hhu.bsinfo.dxapp.MasterSlaveDemoApplication;
 import de.hhu.bsinfo.dxmem.data.ChunkID;
 
 
@@ -27,7 +27,7 @@ public class InitTask implements Task {
 
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
 
-        System.out.printf("  DxddlDemoApplication (slave): InitTask.execute called.\n");
+        System.out.printf("  MasterSlaveDemoApplication (slave): InitTask.execute called.\n");
 
         //
         // create list
@@ -57,13 +57,13 @@ public class InitTask implements Task {
         String nodeIDstr = Integer.toHexString(0xFFFF & myNodeID);
 
         // name-service entry should not be used
-        if (nameService.getChunkID(nodeIDstr, DxddlDemoApplication.NAME_SERVICE_LOOKUP_TIMEOUT) != ChunkID.INVALID_ID) {
+        if (nameService.getChunkID(nodeIDstr, MasterSlaveDemoApplication.NAME_SERVICE_LOOKUP_TIMEOUT) != ChunkID.INVALID_ID) {
             System.out.printf( "(slave) Cannot register nameservice entry for slave %x", myNodeID );
         }
         else {
            nameService.register(rc, nodeIDstr);
         }
-        System.out.printf("  DxddlDemoApplication (slave): InitTask.execute done\n");
+        System.out.printf("  MasterSlaveDemoApplication (slave): InitTask.execute done\n");
         return 0;
     }
 

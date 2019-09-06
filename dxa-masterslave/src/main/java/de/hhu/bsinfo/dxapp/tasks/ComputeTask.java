@@ -22,7 +22,7 @@ public class ComputeTask implements Task {
         ChunkService chunkService = taskContext.getDXRAMServiceAccessor().getService(ChunkService.class);
         short myNodeID = taskContext.getCtxData().getOwnNodeId();
 
-        System.out.printf("  DxddlDemoApplication (slave): ComputeTask.execute called.\n");
+        System.out.printf("  MasterSlaveDemoApplication (slave): ComputeTask.execute called.\n");
 
         //
         // get our head chunk from name service
@@ -47,11 +47,11 @@ public class ComputeTask implements Task {
             nc.setID( nc.getNext() );
         }
 
-        System.out.printf("  DxddlDemoApplication (slave): ComputeTask sum = %d\n", sum);
+        System.out.printf("  MasterSlaveDemoApplication (slave): ComputeTask sum = %d\n", sum);
         rc.setSum( sum );
         chunkService.put().put( rc );
 
-        System.out.printf("  DxddlDemoApplication (slave): ComputeTask done.\n");
+        System.out.printf("  MasterSlaveDemoApplication (slave): ComputeTask done.\n");
         return 0;
     }
 
