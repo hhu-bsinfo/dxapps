@@ -35,19 +35,19 @@ of DXRAM.
 1) Starting the first instance (super peer and bootstrapping node)
 ```
 cd build/dist/dxram
-./bin/dxram --bootstrap
+./bin/dxram start --bootstrap
 ```
 
 2) Starting the master (peer)
 ```
 cd build/dist/dxram
-./bin/dxram --start --msrole master
+./bin/dxram start --msrole master
 ```
 
 3) Starting a slave (peer)
 ```
 cd build/dist/dxram
-./bin/dxram --start --msrole slave
+./bin/dxram start --msrole slave
 ```
 
 4) Repeat 3) for additional slaves. Two are recommended to have some distributed use case.
