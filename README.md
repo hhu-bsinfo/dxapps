@@ -6,7 +6,7 @@ The applications in this repository are part of the [DXRAM](https://github.com/h
 
 * [HelloWorld](dxa-helloworld/README.md): Minimal example to get started with developing applications for DXRAM
 * [MasterSlave](dxa-masterslave/README.md): Basic master-slave example 
-* [DXDDl](dxa-dxddl/README.md): Basic example of direct chunk access using DXDdl.
+* [DXDdl](dxa-dxddl/README.md): Basic example of direct chunk access using DXDdl.
 * [ChunkBench](dxa-chunkbench/README.md): A benchmark similar to the Yahoo! Cloud Service Benchmark to test and
 * [Migration](dxa-migration/README.md): Test and benchmark DXRAM's migration
 * [Terminal](dxa-terminal/README.md): Terminal server and client which provides a CLI to connect to DXRAM peers and run
